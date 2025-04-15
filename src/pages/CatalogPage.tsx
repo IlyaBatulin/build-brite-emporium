@@ -1,51 +1,134 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
-import { products, categories, getProductsByCategory, searchProducts } from "@/data/mockData";
-import ProductCard from "@/components/products/ProductCard";
+import { products, categories, getProductsByCategory, searchProducts, getAllCategories } from "@/data/mockData";
+import EnhancedProductCard from "@/components/products/EnhancedProductCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Product } from "@/types";
-import { Search, Filter, ArrowUpDown } from "lucide-react";
+import { FilterOptions, Product } from "@/types";
+import { Search, Filter, ArrowUpDown, SlidersHorizontal } from "lucide-react";
+import FilterSidebar from "@/components/catalog/FilterSidebar";
+import { useMediaQuery } from "@/hooks/use-mobile";
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetDescription, 
+  SheetHeader, 
+  SheetTitle, 
+  SheetTrigger 
+} from "@/components/ui/sheet";
 
 const CatalogPage = () => {
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get("category");
   const searchQuery = searchParams.get("search") || "";
   
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery || "");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    categoryParam ? [categoryParam] : []
-  );
   const [sortOrder, setSortOrder] = useState<"default" | "price-asc" | "price-desc">("default");
-  const [inStockOnly, setInStockOnly] = useState(false);
+  
+  // Set initial filters based on URL parameters
+  const initialFilters: FilterOptions = {
+    categories: categoryParam ? [categoryParam] : [],
+    woodTypes: [],
+    thicknesses: [],
+    widths: [],
+    lengths: [],
+    grades: [],
+    moistures: [],
+    surfaceTreatments: [],
+    purposes: []
+  };
+  
+  const [activeFilters, setActiveFilters] = useState<FilterOptions>(initialFilters);
+  const [totalFiltersCount, setTotalFiltersCount] = useState(0);
+  
+  // Count total active filters
+  useEffect(() => {
+    let count = 0;
+    Object.values(activeFilters).forEach(filterArray => {
+      count += filterArray.length;
+    });
+    setTotalFiltersCount(count);
+  }, [activeFilters]);
   
   useEffect(() => {
+    applyFilters();
+  }, [activeFilters, sortOrder, searchQuery]);
+  
+  const applyFilters = () => {
+    // First get products either by search query or all products
     let result: Product[] = [];
     
-    // Apply search query if exists
     if (searchQuery) {
       result = searchProducts(searchQuery);
-    } 
-    // Apply category filter if selected
-    else if (selectedCategories.length > 0) {
-      result = products.filter(product => 
-        selectedCategories.some(catId => {
-          const category = categories.find(c => c.id === catId);
-          return category && product.category === category.name;
-        })
-      );
-    } 
-    // Otherwise show all products
-    else {
+    } else {
       result = [...products];
     }
     
-    // Filter by in stock
-    if (inStockOnly) {
-      result = result.filter(product => product.inStock);
+    // Apply category filters
+    if (activeFilters.categories.length > 0) {
+      result = result.filter(product => 
+        activeFilters.categories.includes(product.category)
+      );
+    }
+    
+    // Apply wood type filters
+    if (activeFilters.woodTypes.length > 0) {
+      result = result.filter(product => 
+        product.woodType && activeFilters.woodTypes.includes(product.woodType)
+      );
+    }
+    
+    // Apply thickness filters
+    if (activeFilters.thicknesses.length > 0) {
+      result = result.filter(product => 
+        product.thickness && activeFilters.thicknesses.includes(product.thickness)
+      );
+    }
+    
+    // Apply width filters
+    if (activeFilters.widths.length > 0) {
+      result = result.filter(product => 
+        product.width && activeFilters.widths.includes(product.width)
+      );
+    }
+    
+    // Apply length filters
+    if (activeFilters.lengths.length > 0) {
+      result = result.filter(product => 
+        product.length && activeFilters.lengths.includes(product.length)
+      );
+    }
+    
+    // Apply grade filters
+    if (activeFilters.grades.length > 0) {
+      result = result.filter(product => 
+        product.grade && activeFilters.grades.includes(product.grade)
+      );
+    }
+    
+    // Apply moisture filters
+    if (activeFilters.moistures.length > 0) {
+      result = result.filter(product => 
+        product.moisture && activeFilters.moistures.includes(product.moisture)
+      );
+    }
+    
+    // Apply surface treatment filters
+    if (activeFilters.surfaceTreatments.length > 0) {
+      result = result.filter(product => 
+        product.surfaceTreatment && activeFilters.surfaceTreatments.includes(product.surfaceTreatment)
+      );
+    }
+    
+    // Apply purpose filters
+    if (activeFilters.purposes.length > 0) {
+      result = result.filter(product => 
+        product.purpose && activeFilters.purposes.includes(product.purpose)
+      );
     }
     
     // Apply sorting
@@ -56,7 +139,7 @@ const CatalogPage = () => {
     }
     
     setFilteredProducts(result);
-  }, [searchQuery, selectedCategories, sortOrder, inStockOnly]);
+  };
   
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,23 +154,26 @@ const CatalogPage = () => {
     setSearchParams(params);
   };
   
-  const handleCategoryChange = (categoryId: string) => {
-    setSelectedCategories(prev => {
-      if (prev.includes(categoryId)) {
-        return prev.filter(id => id !== categoryId);
-      } else {
-        return [...prev, categoryId];
-      }
-    });
+  const handleFilterChange = (newFilters: FilterOptions) => {
+    setActiveFilters(newFilters);
   };
   
   const handleSort = (order: "default" | "price-asc" | "price-desc") => {
     setSortOrder(order);
   };
   
-  const clearFilters = () => {
-    setSelectedCategories([]);
-    setInStockOnly(false);
+  const clearAllFilters = () => {
+    setActiveFilters({
+      categories: [],
+      woodTypes: [],
+      thicknesses: [],
+      widths: [],
+      lengths: [],
+      grades: [],
+      moistures: [],
+      surfaceTreatments: [],
+      purposes: []
+    });
     setSortOrder("default");
     setLocalSearchQuery("");
     setSearchParams({});
@@ -96,7 +182,7 @@ const CatalogPage = () => {
   return (
     <Layout>
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6">Каталог товаров</h1>
+        <h1 className="text-2xl md:text-3xl font-bold mb-6">Каталог пиломатериалов</h1>
         
         {/* Search and Sort Controls */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -145,52 +231,43 @@ const CatalogPage = () => {
         
         {/* Main Content */}
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar Filters */}
-          <div className="w-full md:w-64 bg-white p-4 rounded-lg shadow-sm">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-lg font-semibold">Фильтры</h2>
-              <Button variant="ghost" size="sm" onClick={clearFilters}>
-                Сбросить
-              </Button>
-            </div>
-            
-            <div className="mb-6">
-              <h3 className="text-sm font-medium mb-3">Категории</h3>
-              <div className="space-y-2">
-                {categories.map((category) => (
-                  <div key={category.id} className="flex items-center">
-                    <Checkbox
-                      id={`category-${category.id}`}
-                      checked={selectedCategories.includes(category.id)}
-                      onCheckedChange={() => handleCategoryChange(category.id)}
-                    />
-                    <label
-                      htmlFor={`category-${category.id}`}
-                      className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      {category.name}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            <div className="mb-6">
-              <h3 className="text-sm font-medium mb-3">Наличие</h3>
-              <div className="flex items-center">
-                <Checkbox
-                  id="in-stock"
-                  checked={inStockOnly}
-                  onCheckedChange={() => setInStockOnly(!inStockOnly)}
-                />
-                <label
-                  htmlFor="in-stock"
-                  className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Только в наличии
-                </label>
-              </div>
-            </div>
+          {/* Sidebar Filters - Desktop */}
+          <div className="hidden md:block w-full md:w-64 flex-shrink-0">
+            <FilterSidebar 
+              onFilterChange={handleFilterChange}
+              initialFilters={initialFilters}
+            />
+          </div>
+          
+          {/* Mobile Filters */}
+          <div className="md:hidden w-full mb-4">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" className="w-full">
+                  <SlidersHorizontal className="mr-2 h-4 w-4" />
+                  Фильтры
+                  {totalFiltersCount > 0 && (
+                    <span className="ml-2 bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs">
+                      {totalFiltersCount}
+                    </span>
+                  )}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[85vw] sm:max-w-md overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>Фильтры</SheetTitle>
+                  <SheetDescription>
+                    Настройте параметры фильтрации для поиска нужных товаров
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="mt-4">
+                  <FilterSidebar
+                    onFilterChange={handleFilterChange}
+                    initialFilters={activeFilters}
+                  />
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
           
           {/* Products Grid */}
@@ -198,7 +275,7 @@ const CatalogPage = () => {
             {filteredProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <EnhancedProductCard key={product.id} product={product} />
                 ))}
               </div>
             ) : (
@@ -207,6 +284,9 @@ const CatalogPage = () => {
                 <p className="text-gray-600">
                   Попробуйте изменить параметры поиска или фильтры
                 </p>
+                <Button onClick={clearAllFilters} className="mt-4" variant="outline">
+                  Сбросить все фильтры
+                </Button>
               </div>
             )}
           </div>

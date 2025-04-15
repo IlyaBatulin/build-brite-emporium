@@ -6,8 +6,27 @@ import { Product } from "@/types";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
-import { ArrowLeft, Plus, Minus, ShoppingCart, Truck } from "lucide-react";
+import { 
+  ArrowLeft, 
+  Plus, 
+  Minus, 
+  ShoppingCart, 
+  Truck, 
+  Ruler, 
+  Droplet, 
+  Award, 
+  Trees, 
+  CheckCircle 
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from "@/components/ui/table";
 
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -75,17 +94,18 @@ const ProductPage = () => {
           
           {/* Product Details */}
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold mb-2">{product.name}</h1>
-            <div className="flex items-center mb-4">
-              <span className="text-gray-600 mr-2">Категория:</span>
-              <Link to={`/catalog?category=${product.category}`} className="text-brand hover:underline">
+            <div className="mb-3">
+              <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 font-medium">
                 {product.category}
-              </Link>
+              </Badge>
             </div>
             
-            <div className="mb-6">
+            <h1 className="text-2xl md:text-3xl font-bold mb-4">{product.name}</h1>
+            
+            <div className="flex items-center mb-6">
               {product.inStock ? (
-                <Badge className="bg-green-100 text-green-800 hover:bg-green-100 font-medium">
+                <Badge className="bg-green-100 text-green-800 hover:bg-green-100 font-medium flex items-center">
+                  <CheckCircle className="h-3 w-3 mr-1" />
                   В наличии
                 </Badge>
               ) : (
@@ -95,7 +115,70 @@ const ProductPage = () => {
               )}
             </div>
             
-            <p className="text-3xl font-bold mb-4">{product.price.toLocaleString()} ₽/{product.unit}</p>
+            <p className="text-3xl font-bold mb-6">{product.price.toLocaleString()} ₽/{product.unit}</p>
+            
+            {/* Product Specifications */}
+            <div className="mb-6 space-y-4">
+              <h2 className="text-lg font-semibold">Характеристики</h2>
+              
+              <Table>
+                <TableBody>
+                  {product.woodType && (
+                    <TableRow>
+                      <TableCell className="font-medium py-2 flex items-center">
+                        <Trees className="h-4 w-4 mr-2 text-brand" />
+                        Порода древесины
+                      </TableCell>
+                      <TableCell className="py-2">{product.woodType}</TableCell>
+                    </TableRow>
+                  )}
+                  
+                  {product.thickness && product.width && product.length && (
+                    <TableRow>
+                      <TableCell className="font-medium py-2 flex items-center">
+                        <Ruler className="h-4 w-4 mr-2 text-brand" />
+                        Размеры
+                      </TableCell>
+                      <TableCell className="py-2">{product.thickness} × {product.width} × {product.length} мм</TableCell>
+                    </TableRow>
+                  )}
+                  
+                  {product.grade && (
+                    <TableRow>
+                      <TableCell className="font-medium py-2 flex items-center">
+                        <Award className="h-4 w-4 mr-2 text-brand" />
+                        Сортность
+                      </TableCell>
+                      <TableCell className="py-2">{product.grade}</TableCell>
+                    </TableRow>
+                  )}
+                  
+                  {product.moisture && (
+                    <TableRow>
+                      <TableCell className="font-medium py-2 flex items-center">
+                        <Droplet className="h-4 w-4 mr-2 text-brand" />
+                        Влажность
+                      </TableCell>
+                      <TableCell className="py-2">{product.moisture}</TableCell>
+                    </TableRow>
+                  )}
+                  
+                  {product.surfaceTreatment && (
+                    <TableRow>
+                      <TableCell className="font-medium py-2">Обработка поверхности</TableCell>
+                      <TableCell className="py-2">{product.surfaceTreatment}</TableCell>
+                    </TableRow>
+                  )}
+                  
+                  {product.purpose && (
+                    <TableRow>
+                      <TableCell className="font-medium py-2">Назначение</TableCell>
+                      <TableCell className="py-2">{product.purpose}</TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
             
             <div className="mb-6">
               <h2 className="text-lg font-semibold mb-2">Описание</h2>
