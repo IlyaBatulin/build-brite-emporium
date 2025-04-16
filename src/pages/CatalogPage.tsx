@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -9,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FilterOptions, Product } from "@/types";
 import { Search, Filter, ArrowUpDown, SlidersHorizontal } from "lucide-react";
 import FilterSidebar from "@/components/catalog/FilterSidebar";
-import { useMediaQuery } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { 
   Sheet, 
   SheetContent, 
@@ -20,7 +19,7 @@ import {
 } from "@/components/ui/sheet";
 
 const CatalogPage = () => {
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isMobile = useIsMobile();
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get("category");
   const searchQuery = searchParams.get("search") || "";
@@ -29,7 +28,6 @@ const CatalogPage = () => {
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery || "");
   const [sortOrder, setSortOrder] = useState<"default" | "price-asc" | "price-desc">("default");
   
-  // Set initial filters based on URL parameters
   const initialFilters: FilterOptions = {
     categories: categoryParam ? [categoryParam] : [],
     woodTypes: [],
@@ -45,7 +43,6 @@ const CatalogPage = () => {
   const [activeFilters, setActiveFilters] = useState<FilterOptions>(initialFilters);
   const [totalFiltersCount, setTotalFiltersCount] = useState(0);
   
-  // Count total active filters
   useEffect(() => {
     let count = 0;
     Object.values(activeFilters).forEach(filterArray => {
@@ -59,7 +56,6 @@ const CatalogPage = () => {
   }, [activeFilters, sortOrder, searchQuery]);
   
   const applyFilters = () => {
-    // First get products either by search query or all products
     let result: Product[] = [];
     
     if (searchQuery) {
@@ -68,70 +64,60 @@ const CatalogPage = () => {
       result = [...products];
     }
     
-    // Apply category filters
     if (activeFilters.categories.length > 0) {
       result = result.filter(product => 
         activeFilters.categories.includes(product.category)
       );
     }
     
-    // Apply wood type filters
     if (activeFilters.woodTypes.length > 0) {
       result = result.filter(product => 
         product.woodType && activeFilters.woodTypes.includes(product.woodType)
       );
     }
     
-    // Apply thickness filters
     if (activeFilters.thicknesses.length > 0) {
       result = result.filter(product => 
         product.thickness && activeFilters.thicknesses.includes(product.thickness)
       );
     }
     
-    // Apply width filters
     if (activeFilters.widths.length > 0) {
       result = result.filter(product => 
         product.width && activeFilters.widths.includes(product.width)
       );
     }
     
-    // Apply length filters
     if (activeFilters.lengths.length > 0) {
       result = result.filter(product => 
         product.length && activeFilters.lengths.includes(product.length)
       );
     }
     
-    // Apply grade filters
     if (activeFilters.grades.length > 0) {
       result = result.filter(product => 
         product.grade && activeFilters.grades.includes(product.grade)
       );
     }
     
-    // Apply moisture filters
     if (activeFilters.moistures.length > 0) {
       result = result.filter(product => 
         product.moisture && activeFilters.moistures.includes(product.moisture)
       );
     }
     
-    // Apply surface treatment filters
     if (activeFilters.surfaceTreatments.length > 0) {
       result = result.filter(product => 
         product.surfaceTreatment && activeFilters.surfaceTreatments.includes(product.surfaceTreatment)
       );
     }
     
-    // Apply purpose filters
     if (activeFilters.purposes.length > 0) {
       result = result.filter(product => 
         product.purpose && activeFilters.purposes.includes(product.purpose)
       );
     }
     
-    // Apply sorting
     if (sortOrder === "price-asc") {
       result.sort((a, b) => a.price - b.price);
     } else if (sortOrder === "price-desc") {
@@ -184,7 +170,6 @@ const CatalogPage = () => {
       <div className="container mx-auto py-8 px-4">
         <h1 className="text-2xl md:text-3xl font-bold mb-6">Каталог пиломатериалов</h1>
         
-        {/* Search and Sort Controls */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <form onSubmit={handleSearch} className="w-full md:w-auto flex gap-2">
             <div className="relative flex-grow">
@@ -229,9 +214,7 @@ const CatalogPage = () => {
           </div>
         </div>
         
-        {/* Main Content */}
         <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar Filters - Desktop */}
           <div className="hidden md:block w-full md:w-64 flex-shrink-0">
             <FilterSidebar 
               onFilterChange={handleFilterChange}
@@ -239,7 +222,6 @@ const CatalogPage = () => {
             />
           </div>
           
-          {/* Mobile Filters */}
           <div className="md:hidden w-full mb-4">
             <Sheet>
               <SheetTrigger asChild>
@@ -270,7 +252,6 @@ const CatalogPage = () => {
             </Sheet>
           </div>
           
-          {/* Products Grid */}
           <div className="flex-1">
             {filteredProducts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
