@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { categories, getPopularProducts } from "@/data/mockData";
 import ProductCard from "@/components/products/ProductCard";
 import CategoryCard from "@/components/categories/CategoryCard";
+import PriceCalculator from "@/components/calculator/PriceCalculator";
+import HouseVisualizer from "@/components/visualizer/HouseVisualizer";
 import { Category, Product } from "@/types";
 import { Truck, Package, Clock, Phone } from "lucide-react";
 
@@ -89,6 +91,28 @@ const HomePage = () => {
                 <p className="text-sm text-gray-600">Профессиональная помощь</p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive House Visualizer */}
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">
+            Интерактивный конструктор дома
+          </h2>
+          <HouseVisualizer />
+        </div>
+      </section>
+
+      {/* Price Calculator */}
+      <section className="py-12 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center">
+            Расчёт стоимости материалов
+          </h2>
+          <div className="flex justify-center">
+            <PriceCalculator />
           </div>
         </div>
       </section>
