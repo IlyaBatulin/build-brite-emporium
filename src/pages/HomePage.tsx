@@ -9,11 +9,13 @@ import CategoryCard from "@/components/categories/CategoryCard";
 import PriceCalculator from "@/components/calculator/PriceCalculator";
 import HouseVisualizer from "@/components/visualizer/HouseVisualizer";
 import { Category, Product } from "@/types";
-import { Truck, Package, Clock, Phone, ArrowRight } from "lucide-react";
+import { Truck, Package, Clock, Phone, ArrowRight, Settings, BarChart3, CalculatorIcon } from "lucide-react";
 import { motion } from "framer-motion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const HomePage = () => {
   const [popularProducts, setPopularProducts] = useState<Product[]>([]);
+  const [activeTab, setActiveTab] = useState<string>("calculator");
   
   useEffect(() => {
     // In a real app, this would be an API call
@@ -140,7 +142,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Interactive House Visualizer */}
+      {/* Calculator and Visualizer Section */}
       <section className="py-12 bg-gradient-to-b from-white to-gray-50">
         <div className="container mx-auto px-4">
           <motion.div
@@ -148,42 +150,42 @@ const HomePage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
+            className="mb-10"
           >
-            <div className="text-center mb-10">
+            <div className="text-center mb-6">
               <h2 className="inline-block text-2xl md:text-3xl font-bold text-gray-800 mb-2 relative">
-                Интерактивный конструктор дома
+                Инструменты для расчета и визуализации
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-green-500 opacity-75 rounded"></div>
               </h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                Выберите часть дома, чтобы увидеть подходящие материалы из нашего каталога. Интерактивная модель поможет подобрать нужные пиломатериалы для вашего проекта.
+                Воспользуйтесь нашими интерактивными инструментами, чтобы рассчитать стоимость материалов и визуально подобрать их для вашего дома
               </p>
             </div>
-            <HouseVisualizer />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Price Calculator */}
-      <section className="py-12 bg-gradient-to-b from-gray-50 to-white">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <div className="text-center mb-10">
-              <h2 className="inline-block text-2xl md:text-3xl font-bold text-gray-800 mb-2 relative">
-                Расчёт стоимости материалов
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-green-500 opacity-75 rounded"></div>
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Определите точную стоимость необходимых пиломатериалов для вашего проекта. Учитывайте тип древесины, обработку и нужные размеры.
-              </p>
-            </div>
-            <div className="flex justify-center">
-              <PriceCalculator />
-            </div>
+            
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <div className="flex justify-center mb-6">
+                <TabsList className="bg-white border shadow-sm">
+                  <TabsTrigger value="calculator" className="data-[state=active]:bg-green-100 data-[state=active]:text-green-800 px-6 flex items-center gap-2">
+                    <CalculatorIcon className="h-4 w-4" />
+                    Калькулятор
+                  </TabsTrigger>
+                  <TabsTrigger value="visualizer" className="data-[state=active]:bg-green-100 data-[state=active]:text-green-800 px-6 flex items-center gap-2">
+                    <Settings className="h-4 w-4" />
+                    Конструктор дома
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+              
+              <TabsContent value="calculator" className="mt-0">
+                <div className="flex justify-center">
+                  <PriceCalculator />
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="visualizer" className="mt-0">
+                <HouseVisualizer />
+              </TabsContent>
+            </Tabs>
           </motion.div>
         </div>
       </section>
