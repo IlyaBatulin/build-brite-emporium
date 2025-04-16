@@ -1,4 +1,3 @@
-
 import { Product, Category } from "@/types";
 
 // Hierarchical Categories with parent-child relationship
@@ -555,6 +554,17 @@ export const getProductsByCategory = (categoryId: string): Product[] => {
 // Helper function to get a product by id
 export const getProductById = (id: string): Product | undefined => {
   return products.find(product => product.id === id);
+};
+
+// Helper function to get related products
+export const getRelatedProducts = (productId: string, category: string): Product[] => {
+  // Find products in the same category, excluding the current product
+  return products
+    .filter(product => 
+      product.id !== productId && 
+      product.category === category
+    )
+    .slice(0, 4); // Return maximum 4 related products
 };
 
 // Helper function for search

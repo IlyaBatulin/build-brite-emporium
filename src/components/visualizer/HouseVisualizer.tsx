@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { 
   Card, 
@@ -9,11 +8,10 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Cube, RotateCcw, Home, Info, ArrowRight, Axe } from "lucide-react";
+import { Cuboid, RotateCcw, Home, Info, ArrowRight, Axe } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
-// Parts of a house that can be selected
 type HousePart = "foundation" | "walls" | "roof" | "floor" | "windows" | "doors" | "deck" | "fence";
 
 interface PartInfo {
@@ -33,7 +31,6 @@ const HouseVisualizer = () => {
   const [activePart, setActivePart] = useState<HousePart | null>(null);
   const [isVisible, setIsVisible] = useState(true);
 
-  // Mapping of house parts to their materials info
   const partsInfo: Record<HousePart, PartInfo> = {
     foundation: {
       name: "Фундамент",
@@ -145,34 +142,26 @@ const HouseVisualizer = () => {
     }
   };
 
-  // Initialize ThreeJS scene
   useEffect(() => {
     if (!canvasRef.current || !isVisible) return;
     
-    // Placeholder for ThreeJS initialization
-    // Here would be the code for creating a 3D house model
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     if (!context) return;
     
-    // For now, we'll just draw a placeholder house
     const drawHouse = () => {
       if (!context) return;
       context.clearRect(0, 0, canvas.width, canvas.height);
       
-      // Set canvas size
       canvas.width = canvas.clientWidth;
       canvas.height = canvas.clientHeight;
       
-      // Draw foundation
       context.fillStyle = activePart === 'foundation' ? '#9b87f5' : '#999';
       context.fillRect(50, 280, 300, 20);
       
-      // Draw walls
       context.fillStyle = activePart === 'walls' ? '#9b87f5' : '#e5deff';
       context.fillRect(70, 150, 260, 130);
       
-      // Draw roof
       context.fillStyle = activePart === 'roof' ? '#9b87f5' : '#D6BCFA';
       context.beginPath();
       context.moveTo(50, 150);
@@ -181,56 +170,42 @@ const HouseVisualizer = () => {
       context.closePath();
       context.fill();
       
-      // Draw door
       context.fillStyle = activePart === 'doors' ? '#9b87f5' : '#6E59A5';
       context.fillRect(170, 220, 60, 90);
       
-      // Draw windows
       context.fillStyle = activePart === 'windows' ? '#9b87f5' : '#7E69AB';
       context.fillRect(100, 200, 50, 50);
       context.fillRect(250, 200, 50, 50);
       
-      // Draw floor
       context.fillStyle = activePart === 'floor' ? '#9b87f5' : '#8E9196';
       context.fillRect(70, 260, 260, 10);
       
-      // Draw deck
       context.fillStyle = activePart === 'deck' ? '#9b87f5' : '#F2FCE2';
       context.fillRect(250, 280, 120, 20);
       
-      // Draw fence
       context.fillStyle = activePart === 'fence' ? '#9b87f5' : '#FEF7CD';
       for (let i = 20; i <= 380; i += 20) {
         if (i < 140 || i > 240) 
           context.fillRect(i, 290, 5, 30);
       }
       
-      // Add labels with arrows to different parts
       context.font = '12px Arial';
       context.fillStyle = '#333';
       
-      // Foundation label
       drawLabelWithArrow(context, 'Фундамент', 40, 320, 100, 290);
       
-      // Walls label
       drawLabelWithArrow(context, 'Стены', 30, 190, 70, 200);
       
-      // Roof label
       drawLabelWithArrow(context, 'Крыша', 360, 110, 330, 140);
       
-      // Door label
       drawLabelWithArrow(context, 'Двери', 250, 260, 210, 250);
       
-      // Windows label
       drawLabelWithArrow(context, 'Окна', 130, 180, 120, 195);
       
-      // Floor label
       drawLabelWithArrow(context, 'Пол', 350, 250, 330, 260);
       
-      // Deck label
       drawLabelWithArrow(context, 'Терраса', 310, 320, 300, 290);
       
-      // Fence label
       drawLabelWithArrow(context, 'Забор', 390, 310, 370, 300);
     };
 
@@ -244,38 +219,28 @@ const HouseVisualizer = () => {
     
     drawHouse();
     
-    // Add event listeners for interaction
     const handleCanvasClick = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       
-      // Check what part was clicked
       if (y > 280 && y < 300 && x > 50 && x < 350) {
-        // Foundation was clicked
         handlePartSelect('foundation');
       } else if (y > 150 && y < 280 && x > 70 && x < 330) {
-        // Walls were clicked
         handlePartSelect('walls');
       } else if (y > 80 && y < 150 && x > 50 && x < 350 && 
                 ((y > -0.35*x + 150) && (y < 0.35*x + 10))) {
-        // Roof was clicked
         handlePartSelect('roof');
       } else if (y > 220 && y < 310 && x > 170 && x < 230) {
-        // Door was clicked
         handlePartSelect('doors');
       } else if (((y > 200 && y < 250 && x > 100 && x < 150) || 
                  (y > 200 && y < 250 && x > 250 && x < 300))) {
-        // Windows were clicked
         handlePartSelect('windows');
       } else if (y > 260 && y < 270 && x > 70 && x < 330) {
-        // Floor was clicked
         handlePartSelect('floor');
       } else if (y > 280 && y < 300 && x > 250 && x < 370) {
-        // Deck was clicked
         handlePartSelect('deck');
       } else if (y > 290 && y < 320) {
-        // Fence was clicked
         handlePartSelect('fence');
       }
     };
@@ -335,7 +300,7 @@ const HouseVisualizer = () => {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-lg text-green-800 flex items-center gap-2">
-                    <Cube className="h-5 w-5 text-green-600" />
+                    <Cuboid className="h-5 w-5 text-green-600" />
                     {partsInfo[activePart].name}
                   </h3>
                   <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
