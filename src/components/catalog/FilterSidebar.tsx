@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { 
   Accordion, 
@@ -9,10 +8,10 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
+import { Badge } from "@/components/ui/badge";
 import { FilterOptions, woodTypes, thicknesses, widths, lengths, grades, moistures, surfaceTreatments, purposes } from "@/types";
 import { getAllCategories } from "@/data/mockData";
+import { ChevronRight, X } from "lucide-react";
 
 interface FilterSidebarProps {
   onFilterChange: (filters: FilterOptions) => void;
@@ -20,7 +19,6 @@ interface FilterSidebarProps {
 }
 
 const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) => {
-  // Initialize filters with empty arrays or initial values if provided
   const [filters, setFilters] = useState<FilterOptions>({
     categories: initialFilters?.categories || [],
     woodTypes: initialFilters?.woodTypes || [],
@@ -34,17 +32,52 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
   });
   
   const allCategories = getAllCategories();
+  const [activeFiltersCount, setActiveFiltersCount] = useState<Record<string, number>>({
+    categories: 0,
+    woodTypes: 0,
+    dimensions: 0,
+    grades: 0,
+    moistures: 0,
+    treatments: 0,
+    purposes: 0
+  });
   
-  // When filters change, notify the parent component
   useEffect(() => {
     onFilterChange(filters);
+    
+    setActiveFiltersCount({
+      categories: filters.categories.length,
+      woodTypes: filters.woodTypes.length,
+      dimensions: filters.thicknesses.length + filters.widths.length + filters.lengths.length,
+      grades: filters.grades.length,
+      moistures: filters.moistures.length,
+      treatments: filters.surfaceTreatments.length,
+      purposes: filters.purposes.length
+    });
   }, [filters, onFilterChange]);
   
-  const handleCategoryChange = (categoryName: string) => {
+  const handleCategoryChange = (categoryName: string, isParent: boolean = false, childCategories: string[] = []) => {
     setFilters(prev => {
-      const newCategories = prev.categories.includes(categoryName)
-        ? prev.categories.filter(name => name !== categoryName)
-        : [...prev.categories, categoryName];
+      let newCategories = [...prev.categories];
+      
+      if (isParent) {
+        if (newCategories.includes(categoryName)) {
+          newCategories = newCategories.filter(name => name !== categoryName && !childCategories.includes(name));
+        } else {
+          newCategories.push(categoryName);
+          childCategories.forEach(child => {
+            if (!newCategories.includes(child)) {
+              newCategories.push(child);
+            }
+          });
+        }
+      } else {
+        if (newCategories.includes(categoryName)) {
+          newCategories = newCategories.filter(name => name !== categoryName);
+        } else {
+          newCategories.push(categoryName);
+        }
+      }
       
       return { ...prev, categories: newCategories };
     });
@@ -55,6 +88,26 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
       const newTypes = prev.woodTypes.includes(type)
         ? prev.woodTypes.filter(t => t !== type)
         : [...prev.woodTypes, type];
+      
+      return { ...prev, woodTypes: newTypes };
+    });
+  };
+  
+  const handleWoodGroupChange = (groupTypes: string[]) => {
+    setFilters(prev => {
+      const allSelected = groupTypes.every(type => prev.woodTypes.includes(type));
+      
+      let newTypes = [...prev.woodTypes];
+      
+      if (allSelected) {
+        newTypes = newTypes.filter(type => !groupTypes.includes(type));
+      } else {
+        groupTypes.forEach(type => {
+          if (!newTypes.includes(type)) {
+            newTypes.push(type);
+          }
+        });
+      }
       
       return { ...prev, woodTypes: newTypes };
     });
@@ -130,6 +183,13 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
     });
   };
   
+  const clearFilterSection = (section: keyof FilterOptions) => {
+    setFilters(prev => ({
+      ...prev,
+      [section]: []
+    }));
+  };
+  
   const clearAllFilters = () => {
     setFilters({
       categories: [],
@@ -144,7 +204,6 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
     });
   };
   
-  // Group categories by parent for hierarchical display
   const topLevelCategories = allCategories.filter(cat => !cat.parentId);
   const groupedByParent: Record<string, typeof allCategories> = {};
   
@@ -157,155 +216,314 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
     }
   });
   
+  const coniferousTypes = ['Сосна', 'Ель'];
+  const deciduousTypes = ['Дуб', 'Бук', 'Ясень', 'Ольха', 'Берёза'];
+  const exoticTypes = ['Тик', 'Махагони', 'Венге', 'Мербау', 'Ироко', 'Зебрано', 'Палисандр'];
+  
   return (
-    <div className="bg-white rounded-lg shadow-sm p-5 space-y-6">
+    <div className="bg-white rounded-lg shadow-lg p-6 space-y-6 border border-gray-100">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Фильтры</h2>
+        <h2 className="text-xl font-semibold text-gray-800">Фильтры</h2>
         <Button 
-          variant="ghost" 
+          variant="outline" 
           size="sm" 
           onClick={clearAllFilters}
-          className="text-sm"
+          className="text-sm hover:bg-gray-100 transition-colors"
         >
           Сбросить все
         </Button>
       </div>
       
-      <Accordion type="multiple" className="w-full">
-        {/* Categories Filter */}
-        <AccordionItem value="categories">
-          <AccordionTrigger className="text-sm font-medium">
-            Категории продукции
+      {(filters.categories.length > 0 || 
+        filters.woodTypes.length > 0 || 
+        filters.thicknesses.length > 0 ||
+        filters.widths.length > 0 ||
+        filters.lengths.length > 0 ||
+        filters.grades.length > 0 ||
+        filters.moistures.length > 0 ||
+        filters.surfaceTreatments.length > 0 ||
+        filters.purposes.length > 0) && (
+        <div className="flex flex-wrap gap-2 pb-3 border-b border-gray-100">
+          {filters.categories.map(cat => (
+            <Badge key={cat} variant="secondary" className="bg-gray-100 hover:bg-gray-200 text-gray-800">
+              {cat}
+              <button onClick={() => handleCategoryChange(cat)} className="ml-1">
+                <X size={14} />
+              </button>
+            </Badge>
+          ))}
+          {filters.woodTypes.map(type => (
+            <Badge key={type} variant="secondary" className="bg-gray-100 hover:bg-gray-200 text-gray-800">
+              {type}
+              <button onClick={() => handleWoodTypeChange(type)} className="ml-1">
+                <X size={14} />
+              </button>
+            </Badge>
+          ))}
+        </div>
+      )}
+      
+      <Accordion type="multiple" className="w-full space-y-2">
+        <AccordionItem value="categories" className="border border-gray-100 rounded-md">
+          <AccordionTrigger className="px-4 py-3 text-base font-medium hover:bg-gray-50 rounded-t-md">
+            <div className="flex justify-between items-center w-full">
+              <span>Категории продукции</span>
+              {activeFiltersCount.categories > 0 && (
+                <Badge className="ml-2 bg-green-600">{activeFiltersCount.categories}</Badge>
+              )}
+            </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
-              {topLevelCategories.map((category) => (
-                <div key={category.id} className="space-y-2">
-                  <div className="flex items-center">
-                    <Checkbox
-                      id={`category-${category.id}`}
-                      checked={filters.categories.includes(category.name)}
-                      onCheckedChange={() => handleCategoryChange(category.name)}
-                    />
-                    <Label
-                      htmlFor={`category-${category.id}`}
-                      className="ml-2 text-sm font-medium"
-                    >
-                      {category.name}
-                    </Label>
-                  </div>
-                  
-                  {/* Show subcategories if any */}
-                  {groupedByParent[category.id] && (
-                    <div className="pl-6 space-y-2">
-                      {groupedByParent[category.id].map(subCategory => (
-                        <div key={subCategory.id} className="flex items-center">
-                          <Checkbox
-                            id={`category-${subCategory.id}`}
-                            checked={filters.categories.includes(subCategory.name)}
-                            onCheckedChange={() => handleCategoryChange(subCategory.name)}
-                          />
-                          <Label
-                            htmlFor={`category-${subCategory.id}`}
-                            className="ml-2 text-sm"
-                          >
-                            {subCategory.name}
-                          </Label>
-                        </div>
-                      ))}
+          <AccordionContent className="px-4 pt-2 pb-4">
+            <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+              {topLevelCategories.map((category) => {
+                const childCategories = groupedByParent[category.id] || [];
+                const childCategoryNames = childCategories.map(c => c.name);
+                const isParentSelected = filters.categories.includes(category.name);
+                const areAllChildrenSelected = childCategories.length > 0 && 
+                  childCategories.every(child => filters.categories.includes(child.name));
+                
+                return (
+                  <div key={category.id} className="space-y-3">
+                    <div className="flex items-center">
+                      <Checkbox
+                        id={`category-${category.id}`}
+                        checked={isParentSelected || areAllChildrenSelected}
+                        onCheckedChange={() => handleCategoryChange(category.name, true, childCategoryNames)}
+                        className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                      />
+                      <Label
+                        htmlFor={`category-${category.id}`}
+                        className="ml-2 text-sm font-medium cursor-pointer"
+                      >
+                        {category.name}
+                      </Label>
                     </div>
-                  )}
+                    
+                    {childCategories.length > 0 && (
+                      <div className="pl-6 space-y-2 border-l-2 border-gray-100 ml-1.5">
+                        {childCategories.map(subCategory => {
+                          const subChildCategories = groupedByParent[subCategory.id] || [];
+                          const subChildCategoryNames = subChildCategories.map(c => c.name);
+                          const isSubParentSelected = filters.categories.includes(subCategory.name);
+                          const areAllSubChildrenSelected = subChildCategories.length > 0 && 
+                            subChildCategories.every(child => filters.categories.includes(child.name));
+                          
+                          return (
+                            <div key={subCategory.id} className="space-y-2">
+                              <div className="flex items-center">
+                                <Checkbox
+                                  id={`category-${subCategory.id}`}
+                                  checked={isSubParentSelected || areAllSubChildrenSelected}
+                                  onCheckedChange={() => handleCategoryChange(subCategory.name, true, subChildCategoryNames)}
+                                  className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                                />
+                                <Label
+                                  htmlFor={`category-${subCategory.id}`}
+                                  className="ml-2 text-sm cursor-pointer"
+                                >
+                                  {subCategory.name}
+                                </Label>
+                              </div>
+                              
+                              {subChildCategories.length > 0 && (
+                                <div className="pl-6 space-y-2 border-l-2 border-gray-100 ml-1.5">
+                                  {subChildCategories.map(subChildCategory => (
+                                    <div key={subChildCategory.id} className="flex items-center">
+                                      <Checkbox
+                                        id={`category-${subChildCategory.id}`}
+                                        checked={filters.categories.includes(subChildCategory.name)}
+                                        onCheckedChange={() => handleCategoryChange(subChildCategory.name)}
+                                        className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                                      />
+                                      <Label
+                                        htmlFor={`category-${subChildCategory.id}`}
+                                        className="ml-2 text-sm cursor-pointer"
+                                      >
+                                        {subChildCategory.name}
+                                      </Label>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            {activeFiltersCount.categories > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => clearFilterSection('categories')}
+                className="mt-4 text-xs text-gray-600 hover:text-gray-900"
+              >
+                Очистить категории
+              </Button>
+            )}
+          </AccordionContent>
+        </AccordionItem>
+        
+        <AccordionItem value="woodTypes" className="border border-gray-100 rounded-md">
+          <AccordionTrigger className="px-4 py-3 text-base font-medium hover:bg-gray-50 rounded-t-md">
+            <div className="flex justify-between items-center w-full">
+              <span>Породы древесины</span>
+              {activeFiltersCount.woodTypes > 0 && (
+                <Badge className="ml-2 bg-green-600">{activeFiltersCount.woodTypes}</Badge>
+              )}
+            </div>
+          </AccordionTrigger>
+          <AccordionContent className="px-4 pt-2 pb-4">
+            <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <Checkbox
+                    id="wood-coniferous"
+                    checked={coniferousTypes.every(type => filters.woodTypes.includes(type))}
+                    onCheckedChange={() => handleWoodGroupChange(coniferousTypes)}
+                    className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                  />
+                  <Label
+                    htmlFor="wood-coniferous"
+                    className="ml-2 text-sm font-medium cursor-pointer"
+                  >
+                    Хвойные породы
+                  </Label>
                 </div>
-              ))}
+                
+                <div className="pl-6 space-y-2 border-l-2 border-gray-100 ml-1.5">
+                  {coniferousTypes.map((type) => (
+                    <div key={type} className="flex items-center">
+                      <Checkbox
+                        id={`wood-${type}`}
+                        checked={filters.woodTypes.includes(type)}
+                        onCheckedChange={() => handleWoodTypeChange(type)}
+                        className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                      />
+                      <Label
+                        htmlFor={`wood-${type}`}
+                        className="ml-2 text-sm cursor-pointer"
+                      >
+                        {type}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <Checkbox
+                    id="wood-deciduous"
+                    checked={deciduousTypes.every(type => filters.woodTypes.includes(type))}
+                    onCheckedChange={() => handleWoodGroupChange(deciduousTypes)}
+                    className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                  />
+                  <Label
+                    htmlFor="wood-deciduous"
+                    className="ml-2 text-sm font-medium cursor-pointer"
+                  >
+                    Лиственные породы
+                  </Label>
+                </div>
+                
+                <div className="pl-6 space-y-2 border-l-2 border-gray-100 ml-1.5">
+                  {deciduousTypes.map((type) => (
+                    <div key={type} className="flex items-center">
+                      <Checkbox
+                        id={`wood-${type}`}
+                        checked={filters.woodTypes.includes(type)}
+                        onCheckedChange={() => handleWoodTypeChange(type)}
+                        className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                      />
+                      <Label
+                        htmlFor={`wood-${type}`}
+                        className="ml-2 text-sm cursor-pointer"
+                      >
+                        {type}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <Checkbox
+                    id="wood-exotic"
+                    checked={exoticTypes.every(type => filters.woodTypes.includes(type))}
+                    onCheckedChange={() => handleWoodGroupChange(exoticTypes)}
+                    className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                  />
+                  <Label
+                    htmlFor="wood-exotic"
+                    className="ml-2 text-sm font-medium cursor-pointer"
+                  >
+                    Экзотические породы
+                  </Label>
+                </div>
+                
+                <div className="pl-6 space-y-2 border-l-2 border-gray-100 ml-1.5">
+                  {exoticTypes.map((type) => (
+                    <div key={type} className="flex items-center">
+                      <Checkbox
+                        id={`wood-${type}`}
+                        checked={filters.woodTypes.includes(type)}
+                        onCheckedChange={() => handleWoodTypeChange(type)}
+                        className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
+                      />
+                      <Label
+                        htmlFor={`wood-${type}`}
+                        className="ml-2 text-sm cursor-pointer"
+                      >
+                        {type}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
+            {activeFiltersCount.woodTypes > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => clearFilterSection('woodTypes')}
+                className="mt-4 text-xs text-gray-600 hover:text-gray-900"
+              >
+                Очистить породы
+              </Button>
+            )}
           </AccordionContent>
         </AccordionItem>
         
-        {/* Wood Type Filter */}
-        <AccordionItem value="woodTypes">
-          <AccordionTrigger className="text-sm font-medium">
-            Породы древесины
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
-              <div className="mb-2">
-                <h4 className="text-xs text-gray-600 mb-1">Хвойные породы:</h4>
-                {woodTypes.filter(type => ["Сосна", "Ель"].includes(type)).map((type) => (
-                  <div key={type} className="flex items-center">
-                    <Checkbox
-                      id={`wood-${type}`}
-                      checked={filters.woodTypes.includes(type)}
-                      onCheckedChange={() => handleWoodTypeChange(type)}
-                    />
-                    <Label
-                      htmlFor={`wood-${type}`}
-                      className="ml-2 text-sm"
-                    >
-                      {type}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="mb-2">
-                <h4 className="text-xs text-gray-600 mb-1">Лиственные породы:</h4>
-                {woodTypes.filter(type => ["Дуб", "Бук", "Ясень", "Ольха", "Берёза"].includes(type)).map((type) => (
-                  <div key={type} className="flex items-center">
-                    <Checkbox
-                      id={`wood-${type}`}
-                      checked={filters.woodTypes.includes(type)}
-                      onCheckedChange={() => handleWoodTypeChange(type)}
-                    />
-                    <Label
-                      htmlFor={`wood-${type}`}
-                      className="ml-2 text-sm"
-                    >
-                      {type}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-              
-              <div>
-                <h4 className="text-xs text-gray-600 mb-1">Экзотические породы:</h4>
-                {woodTypes.filter(type => ["Тик", "Махагони", "Венге", "Мербау", "Ироко", "Зебрано", "Палисандр"].includes(type)).map((type) => (
-                  <div key={type} className="flex items-center">
-                    <Checkbox
-                      id={`wood-${type}`}
-                      checked={filters.woodTypes.includes(type)}
-                      onCheckedChange={() => handleWoodTypeChange(type)}
-                    />
-                    <Label
-                      htmlFor={`wood-${type}`}
-                      className="ml-2 text-sm"
-                    >
-                      {type}
-                    </Label>
-                  </div>
-                ))}
-              </div>
+        <AccordionItem value="dimensions" className="border border-gray-100 rounded-md">
+          <AccordionTrigger className="px-4 py-3 text-base font-medium hover:bg-gray-50 rounded-t-md">
+            <div className="flex justify-between items-center w-full">
+              <span>Размеры</span>
+              {activeFiltersCount.dimensions > 0 && (
+                <Badge className="ml-2 bg-green-600">{activeFiltersCount.dimensions}</Badge>
+              )}
             </div>
-          </AccordionContent>
-        </AccordionItem>
-        
-        {/* Dimensions Filter */}
-        <AccordionItem value="dimensions">
-          <AccordionTrigger className="text-sm font-medium">
-            Размеры
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-4">
-              {/* Thickness */}
+          <AccordionContent className="px-4 pt-2 pb-4">
+            <div className="space-y-6">
               <div>
-                <h4 className="text-sm font-medium mb-2">Толщина (мм):</h4>
-                <div className="grid grid-cols-3 gap-2">
+                <h4 className="text-sm font-medium mb-3 text-gray-800">Толщина (мм):</h4>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                   {thicknesses.map(thickness => (
                     <Button
                       key={thickness}
                       variant={filters.thicknesses.includes(thickness) ? "default" : "outline"}
                       size="sm"
                       onClick={() => handleThicknessChange(thickness)}
-                      className="text-xs h-8"
+                      className={`text-xs h-8 ${
+                        filters.thicknesses.includes(thickness) 
+                          ? "bg-green-600 hover:bg-green-700 text-white" 
+                          : "hover:bg-gray-100 text-gray-700"
+                      }`}
                     >
                       {thickness}
                     </Button>
@@ -313,17 +531,20 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
                 </div>
               </div>
               
-              {/* Width */}
               <div>
-                <h4 className="text-sm font-medium mb-2">Ширина (мм):</h4>
-                <div className="grid grid-cols-3 gap-2">
+                <h4 className="text-sm font-medium mb-3 text-gray-800">Ширина (мм):</h4>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                   {widths.map(width => (
                     <Button
                       key={width}
                       variant={filters.widths.includes(width) ? "default" : "outline"}
                       size="sm"
                       onClick={() => handleWidthChange(width)}
-                      className="text-xs h-8"
+                      className={`text-xs h-8 ${
+                        filters.widths.includes(width) 
+                          ? "bg-green-600 hover:bg-green-700 text-white" 
+                          : "hover:bg-gray-100 text-gray-700"
+                      }`}
                     >
                       {width}
                     </Button>
@@ -331,17 +552,20 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
                 </div>
               </div>
               
-              {/* Length */}
               <div>
-                <h4 className="text-sm font-medium mb-2">Длина (мм):</h4>
-                <div className="grid grid-cols-3 gap-2">
+                <h4 className="text-sm font-medium mb-3 text-gray-800">Длина (мм):</h4>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                   {lengths.map(length => (
                     <Button
                       key={length}
                       variant={filters.lengths.includes(length) ? "default" : "outline"}
                       size="sm"
                       onClick={() => handleLengthChange(length)}
-                      className="text-xs h-8"
+                      className={`text-xs h-8 ${
+                        filters.lengths.includes(length) 
+                          ? "bg-green-600 hover:bg-green-700 text-white" 
+                          : "hover:bg-gray-100 text-gray-700"
+                      }`}
                     >
                       {length}
                     </Button>
@@ -349,110 +573,198 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
                 </div>
               </div>
             </div>
+            {activeFiltersCount.dimensions > 0 && (
+              <div className="flex gap-2 mt-4">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => clearFilterSection('thicknesses')}
+                  className="text-xs text-gray-600 hover:text-gray-900"
+                >
+                  Очистить толщину
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => clearFilterSection('widths')}
+                  className="text-xs text-gray-600 hover:text-gray-900"
+                >
+                  Очистить ширину
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => clearFilterSection('lengths')}
+                  className="text-xs text-gray-600 hover:text-gray-900"
+                >
+                  Очистить длину
+                </Button>
+              </div>
+            )}
           </AccordionContent>
         </AccordionItem>
         
-        {/* Grade Filter */}
-        <AccordionItem value="grade">
-          <AccordionTrigger className="text-sm font-medium">
-            Сортность
+        <AccordionItem value="grade" className="border border-gray-100 rounded-md">
+          <AccordionTrigger className="px-4 py-3 text-base font-medium hover:bg-gray-50 rounded-t-md">
+            <div className="flex justify-between items-center w-full">
+              <span>Сортность</span>
+              {activeFiltersCount.grades > 0 && (
+                <Badge className="ml-2 bg-green-600">{activeFiltersCount.grades}</Badge>
+              )}
+            </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-2">
+          <AccordionContent className="px-4 pt-2 pb-4">
+            <div className="space-y-3">
               {grades.map(grade => (
                 <div key={grade} className="flex items-center">
                   <Checkbox
                     id={`grade-${grade}`}
                     checked={filters.grades.includes(grade)}
                     onCheckedChange={() => handleGradeChange(grade)}
+                    className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                   />
                   <Label
                     htmlFor={`grade-${grade}`}
-                    className="ml-2 text-sm"
+                    className="ml-2 text-sm cursor-pointer"
                   >
                     {grade}
                   </Label>
                 </div>
               ))}
             </div>
+            {activeFiltersCount.grades > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => clearFilterSection('grades')}
+                className="mt-4 text-xs text-gray-600 hover:text-gray-900"
+              >
+                Очистить сортность
+              </Button>
+            )}
           </AccordionContent>
         </AccordionItem>
         
-        {/* Moisture Filter */}
-        <AccordionItem value="moisture">
-          <AccordionTrigger className="text-sm font-medium">
-            Влажность
+        <AccordionItem value="moisture" className="border border-gray-100 rounded-md">
+          <AccordionTrigger className="px-4 py-3 text-base font-medium hover:bg-gray-50 rounded-t-md">
+            <div className="flex justify-between items-center w-full">
+              <span>Влажность</span>
+              {activeFiltersCount.moistures > 0 && (
+                <Badge className="ml-2 bg-green-600">{activeFiltersCount.moistures}</Badge>
+              )}
+            </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-2">
+          <AccordionContent className="px-4 pt-2 pb-4">
+            <div className="space-y-3">
               {moistures.map(moisture => (
                 <div key={moisture} className="flex items-center">
                   <Checkbox
                     id={`moisture-${moisture}`}
                     checked={filters.moistures.includes(moisture)}
                     onCheckedChange={() => handleMoistureChange(moisture)}
+                    className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                   />
                   <Label
                     htmlFor={`moisture-${moisture}`}
-                    className="ml-2 text-sm"
+                    className="ml-2 text-sm cursor-pointer"
                   >
                     {moisture}
                   </Label>
                 </div>
               ))}
             </div>
+            {activeFiltersCount.moistures > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => clearFilterSection('moistures')}
+                className="mt-4 text-xs text-gray-600 hover:text-gray-900"
+              >
+                Очистить влажность
+              </Button>
+            )}
           </AccordionContent>
         </AccordionItem>
         
-        {/* Surface Treatment Filter */}
-        <AccordionItem value="treatment">
-          <AccordionTrigger className="text-sm font-medium">
-            Обработка поверхности
+        <AccordionItem value="treatment" className="border border-gray-100 rounded-md">
+          <AccordionTrigger className="px-4 py-3 text-base font-medium hover:bg-gray-50 rounded-t-md">
+            <div className="flex justify-between items-center w-full">
+              <span>Обработка поверхности</span>
+              {activeFiltersCount.treatments > 0 && (
+                <Badge className="ml-2 bg-green-600">{activeFiltersCount.treatments}</Badge>
+              )}
+            </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-2">
+          <AccordionContent className="px-4 pt-2 pb-4">
+            <div className="space-y-3">
               {surfaceTreatments.map(treatment => (
                 <div key={treatment} className="flex items-center">
                   <Checkbox
                     id={`treatment-${treatment}`}
                     checked={filters.surfaceTreatments.includes(treatment)}
                     onCheckedChange={() => handleSurfaceTreatmentChange(treatment)}
+                    className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                   />
                   <Label
                     htmlFor={`treatment-${treatment}`}
-                    className="ml-2 text-sm"
+                    className="ml-2 text-sm cursor-pointer"
                   >
                     {treatment}
                   </Label>
                 </div>
               ))}
             </div>
+            {activeFiltersCount.treatments > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => clearFilterSection('surfaceTreatments')}
+                className="mt-4 text-xs text-gray-600 hover:text-gray-900"
+              >
+                Очистить обработку
+              </Button>
+            )}
           </AccordionContent>
         </AccordionItem>
         
-        {/* Purpose Filter */}
-        <AccordionItem value="purpose">
-          <AccordionTrigger className="text-sm font-medium">
-            Назначение
+        <AccordionItem value="purpose" className="border border-gray-100 rounded-md">
+          <AccordionTrigger className="px-4 py-3 text-base font-medium hover:bg-gray-50 rounded-t-md">
+            <div className="flex justify-between items-center w-full">
+              <span>Назначение</span>
+              {activeFiltersCount.purposes > 0 && (
+                <Badge className="ml-2 bg-green-600">{activeFiltersCount.purposes}</Badge>
+              )}
+            </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-2">
+          <AccordionContent className="px-4 pt-2 pb-4">
+            <div className="space-y-3">
               {purposes.map(purpose => (
                 <div key={purpose} className="flex items-center">
                   <Checkbox
                     id={`purpose-${purpose}`}
                     checked={filters.purposes.includes(purpose)}
                     onCheckedChange={() => handlePurposeChange(purpose)}
+                    className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                   />
                   <Label
                     htmlFor={`purpose-${purpose}`}
-                    className="ml-2 text-sm"
+                    className="ml-2 text-sm cursor-pointer"
                   >
                     {purpose}
                   </Label>
                 </div>
               ))}
             </div>
+            {activeFiltersCount.purposes > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => clearFilterSection('purposes')}
+                className="mt-4 text-xs text-gray-600 hover:text-gray-900"
+              >
+                Очистить назначение
+              </Button>
+            )}
           </AccordionContent>
         </AccordionItem>
       </Accordion>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -6,7 +7,7 @@ import EnhancedProductCard from "@/components/products/EnhancedProductCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FilterOptions, Product } from "@/types";
-import { Search, Filter, ArrowUpDown, SlidersHorizontal } from "lucide-react";
+import { Search, Filter, ArrowUpDown, SlidersHorizontal, X } from "lucide-react";
 import FilterSidebar from "@/components/catalog/FilterSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { 
@@ -17,6 +18,16 @@ import {
   SheetTitle, 
   SheetTrigger 
 } from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 
 const CatalogPage = () => {
   const isMobile = useIsMobile();
@@ -26,7 +37,8 @@ const CatalogPage = () => {
   
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery || "");
-  const [sortOrder, setSortOrder] = useState<"default" | "price-asc" | "price-desc">("default");
+  const [sortOrder, setSortOrder] = useState<"default" | "price-asc" | "price-desc" | "name-asc" | "name-desc">("default");
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   
   const initialFilters: FilterOptions = {
     categories: categoryParam ? [categoryParam] : [],
@@ -122,6 +134,10 @@ const CatalogPage = () => {
       result.sort((a, b) => a.price - b.price);
     } else if (sortOrder === "price-desc") {
       result.sort((a, b) => b.price - a.price);
+    } else if (sortOrder === "name-asc") {
+      result.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortOrder === "name-desc") {
+      result.sort((a, b) => b.name.localeCompare(a.name));
     }
     
     setFilteredProducts(result);
@@ -144,7 +160,7 @@ const CatalogPage = () => {
     setActiveFilters(newFilters);
   };
   
-  const handleSort = (order: "default" | "price-asc" | "price-desc") => {
+  const handleSort = (order: "default" | "price-asc" | "price-desc" | "name-asc" | "name-desc") => {
     setSortOrder(order);
   };
   
@@ -168,7 +184,12 @@ const CatalogPage = () => {
   return (
     <Layout>
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6">Каталог пиломатериалов</h1>
+        <div className="bg-gradient-to-r from-green-700 to-green-500 text-white p-6 rounded-lg mb-8 shadow-lg">
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Каталог пиломатериалов</h1>
+          <p className="text-green-50 max-w-2xl">
+            Широкий ассортимент высококачественных пиломатериалов для строительства и отделки
+          </p>
+        </div>
         
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
           <form onSubmit={handleSearch} className="w-full md:w-auto flex gap-2">
@@ -177,72 +198,65 @@ const CatalogPage = () => {
               <Input
                 type="text"
                 placeholder="Поиск товаров..."
-                className="pl-10 w-full md:w-64"
+                className="pl-10 w-full md:w-64 border-gray-300 focus:border-green-500 focus:ring-green-500"
                 value={localSearchQuery}
                 onChange={(e) => setLocalSearchQuery(e.target.value)}
               />
             </div>
-            <Button type="submit">Найти</Button>
+            <Button type="submit" className="bg-green-600 hover:bg-green-700">Найти</Button>
           </form>
           
-          <div className="flex gap-2">
-            <Button 
-              variant={sortOrder === "default" ? "default" : "outline"} 
-              onClick={() => handleSort("default")}
-              className="text-sm"
-              size="sm"
+          <div className="w-full md:w-auto">
+            <Select
+              onValueChange={(value) => handleSort(value as any)}
+              defaultValue={sortOrder}
             >
-              <ArrowUpDown className="h-4 w-4 mr-1" />
-              По умолчанию
-            </Button>
-            <Button 
-              variant={sortOrder === "price-asc" ? "default" : "outline"} 
-              onClick={() => handleSort("price-asc")}
-              className="text-sm"
-              size="sm"
-            >
-              Цена: по возрастанию
-            </Button>
-            <Button 
-              variant={sortOrder === "price-desc" ? "default" : "outline"} 
-              onClick={() => handleSort("price-desc")}
-              className="text-sm"
-              size="sm"
-            >
-              Цена: по убыванию
-            </Button>
+              <SelectTrigger className="w-full md:w-[200px] border-gray-300">
+                <SelectValue placeholder="Сортировка" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Сортировка</SelectLabel>
+                  <SelectItem value="default">По умолчанию</SelectItem>
+                  <SelectItem value="price-asc">Цена: по возрастанию</SelectItem>
+                  <SelectItem value="price-desc">Цена: по убыванию</SelectItem>
+                  <SelectItem value="name-asc">Название: А-Я</SelectItem>
+                  <SelectItem value="name-desc">Название: Я-А</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
         </div>
         
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="hidden md:block w-full md:w-64 flex-shrink-0">
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="hidden md:block w-full md:w-72 lg:w-80 flex-shrink-0">
             <FilterSidebar 
               onFilterChange={handleFilterChange}
-              initialFilters={initialFilters}
+              initialFilters={activeFilters}
             />
           </div>
           
           <div className="md:hidden w-full mb-4">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full border-gray-300 shadow-sm">
                   <SlidersHorizontal className="mr-2 h-4 w-4" />
                   Фильтры
                   {totalFiltersCount > 0 && (
-                    <span className="ml-2 bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs">
+                    <Badge variant="secondary" className="ml-2 bg-green-600 text-white">
                       {totalFiltersCount}
-                    </span>
+                    </Badge>
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[85vw] sm:max-w-md overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>Фильтры</SheetTitle>
+              <SheetContent side="left" className="w-[90vw] sm:max-w-md overflow-y-auto">
+                <SheetHeader className="text-left">
+                  <SheetTitle className="text-xl font-bold">Фильтры</SheetTitle>
                   <SheetDescription>
                     Настройте параметры фильтрации для поиска нужных товаров
                   </SheetDescription>
                 </SheetHeader>
-                <div className="mt-4">
+                <div className="mt-6">
                   <FilterSidebar
                     onFilterChange={handleFilterChange}
                     initialFilters={activeFilters}
@@ -253,19 +267,52 @@ const CatalogPage = () => {
           </div>
           
           <div className="flex-1">
-            {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProducts.map((product) => (
-                  <EnhancedProductCard key={product.id} product={product} />
-                ))}
+            {/* Show active filters on mobile */}
+            {isMobile && totalFiltersCount > 0 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {Object.entries(activeFilters).flatMap(([key, values]) =>
+                  values.length > 0 ? [
+                    <Badge key={key} variant="outline" className="bg-green-50 text-green-800 border-green-200">
+                      {key}: {values.length}
+                      <button onClick={() => {
+                        setActiveFilters(prev => ({ ...prev, [key]: [] }));
+                      }} className="ml-1">
+                        <X size={14} />
+                      </button>
+                    </Badge>
+                  ] : []
+                )}
+                {totalFiltersCount > 0 && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-sm text-gray-500 ml-auto hover:text-gray-900"
+                    onClick={clearAllFilters}
+                  >
+                    Сбросить все
+                  </Button>
+                )}
               </div>
+            )}
+            
+            {filteredProducts.length > 0 ? (
+              <>
+                <div className="text-sm text-gray-500 mb-4">
+                  Найдено товаров: <span className="font-semibold text-gray-800">{filteredProducts.length}</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {filteredProducts.map((product) => (
+                    <EnhancedProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              </>
             ) : (
-              <div className="text-center py-12">
-                <h2 className="text-xl font-semibold mb-2">Товары не найдены</h2>
-                <p className="text-gray-600">
-                  Попробуйте изменить параметры поиска или фильтры
+              <div className="text-center py-16 bg-white rounded-lg shadow-sm border border-gray-100">
+                <h2 className="text-xl font-semibold mb-2 text-gray-800">Товары не найдены</h2>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                  К сожалению, по вашему запросу ничего не найдено. Попробуйте изменить параметры поиска или фильтры.
                 </p>
-                <Button onClick={clearAllFilters} className="mt-4" variant="outline">
+                <Button onClick={clearAllFilters} className="bg-green-600 hover:bg-green-700">
                   Сбросить все фильтры
                 </Button>
               </div>
