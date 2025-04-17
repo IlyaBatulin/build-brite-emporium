@@ -1,3 +1,4 @@
+
 export interface Product {
   id: string;
   name: string;
@@ -44,21 +45,16 @@ export interface FilterOptions {
 }
 
 // Predefined filter values
-export const woodTypes = [
-  'Сосна', 'Ель', 'Дуб', 'Бук', 'Ясень', 'Ольха', 'Берёза',
-  'Тик', 'Махагони', 'Венге', 'Мербау', 'Ироко', 'Зебрано', 'Палисандр'
-];
-
 export const thicknesses = [25, 30, 40, 50, 100, 150, 200];
 export const widths = [50, 100, 150, 200];
 export const lengths = [3000, 6000];
 
-// Updated wood type categories
+// Wood type categories
 export const coniferousTypes = ['Сосна', 'Ель'];
 export const deciduousTypes = ['Дуб', 'Бук', 'Ясень', 'Ольха', 'Берёза'];
 export const exoticTypes = ['Тик', 'Махагони', 'Венге', 'Мербау', 'Ироко', 'Зебрано', 'Палисандр'];
 
-// Single consolidated woodTypes array
+// Consolidated woodTypes array
 export const woodTypes = [
   ...coniferousTypes, 
   ...deciduousTypes, 
