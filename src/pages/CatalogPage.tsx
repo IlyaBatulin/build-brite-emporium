@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { FilterOptions, Product } from "@/types";
 import { Search, Filter, ArrowUpDown, SlidersHorizontal, X, Calculator, Home } from "lucide-react";
 import FilterSidebar from "@/components/catalog/FilterSidebar";
+import ModernFilterSidebar from "@/components/catalog/ModernFilterSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { 
   Sheet, 
@@ -30,6 +31,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PriceCalculator from "@/components/calculator/PriceCalculator";
 import HouseVisualizer from "@/components/visualizer/HouseVisualizer";
+import FloatingCallButton from "@/components/common/FloatingCallButton";
 
 const CatalogPage = () => {
   const isMobile = useIsMobile();
@@ -42,7 +44,8 @@ const CatalogPage = () => {
   const [sortOrder, setSortOrder] = useState<"default" | "price-asc" | "price-desc" | "name-asc" | "name-desc">("default");
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>("catalog");
-  
+  const [useModernFilters, setUseModernFilters] = useState(true);
+
   const initialFilters: FilterOptions = {
     categories: categoryParam ? [categoryParam] : [],
     woodTypes: [],
@@ -201,7 +204,7 @@ const CatalogPage = () => {
           <div className="relative z-10">
             <h1 className="text-3xl md:text-4xl font-bold mb-2">Каталог пиломатериалов</h1>
             <p className="text-green-50 max-w-2xl text-lg">
-              Широкий ассортимент высококачественных пиломатериалов для строительства и отделки
+              Больше чем стройматериалы — качество, проверенное временем
             </p>
           </div>
         </div>
@@ -223,49 +226,69 @@ const CatalogPage = () => {
           </TabsList>
           
           <TabsContent value="catalog">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-              <form onSubmit={handleSearch} className="w-full md:w-auto flex gap-2">
-                <div className="relative flex-grow">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input
-                    type="text"
-                    placeholder="Поиск товаров..."
-                    className="pl-10 w-full md:w-64 border-gray-300 focus:border-green-500 focus:ring-green-500"
-                    value={localSearchQuery}
-                    onChange={(e) => setLocalSearchQuery(e.target.value)}
-                  />
+            <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100 mb-6">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <form onSubmit={handleSearch} className="w-full md:w-auto flex gap-2">
+                  <div className="relative flex-grow">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      type="text"
+                      placeholder="Поиск товаров..."
+                      className="pl-10 w-full md:w-64 border-gray-300 focus:border-green-500 focus:ring-green-500"
+                      value={localSearchQuery}
+                      onChange={(e) => setLocalSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  <Button type="submit" className="bg-green-700 hover:bg-green-800">Найти</Button>
+                </form>
+                
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                  <div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setUseModernFilters(!useModernFilters)}
+                      className="text-xs border-gray-300"
+                    >
+                      {useModernFilters ? "Классические фильтры" : "Современные фильтры"}
+                    </Button>
+                  </div>
+                
+                  <Select
+                    onValueChange={(value) => handleSort(value as any)}
+                    defaultValue={sortOrder}
+                  >
+                    <SelectTrigger className="w-full md:w-[200px] border-gray-300">
+                      <SelectValue placeholder="Сортировка" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Сортировка</SelectLabel>
+                        <SelectItem value="default">По умолчанию</SelectItem>
+                        <SelectItem value="price-asc">Цена: по возрастанию</SelectItem>
+                        <SelectItem value="price-desc">Цена: по убыванию</SelectItem>
+                        <SelectItem value="name-asc">Название: А-Я</SelectItem>
+                        <SelectItem value="name-desc">Название: Я-А</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Button type="submit" className="bg-green-700 hover:bg-green-800">Найти</Button>
-              </form>
-              
-              <div className="w-full md:w-auto">
-                <Select
-                  onValueChange={(value) => handleSort(value as any)}
-                  defaultValue={sortOrder}
-                >
-                  <SelectTrigger className="w-full md:w-[200px] border-gray-300">
-                    <SelectValue placeholder="Сортировка" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Сортировка</SelectLabel>
-                      <SelectItem value="default">По умолчанию</SelectItem>
-                      <SelectItem value="price-asc">Цена: по возрастанию</SelectItem>
-                      <SelectItem value="price-desc">Цена: по убыванию</SelectItem>
-                      <SelectItem value="name-asc">Название: А-Я</SelectItem>
-                      <SelectItem value="name-desc">Название: Я-А</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
               </div>
             </div>
             
             <div className="flex flex-col md:flex-row gap-8">
               <div className="hidden md:block w-full md:w-72 lg:w-80 flex-shrink-0">
-                <FilterSidebar 
-                  onFilterChange={handleFilterChange}
-                  initialFilters={activeFilters}
-                />
+                {useModernFilters ? (
+                  <ModernFilterSidebar 
+                    onFilterChange={handleFilterChange}
+                    initialFilters={activeFilters}
+                  />
+                ) : (
+                  <FilterSidebar 
+                    onFilterChange={handleFilterChange}
+                    initialFilters={activeFilters}
+                  />
+                )}
               </div>
               
               <div className="md:hidden w-full mb-4">
@@ -289,10 +312,17 @@ const CatalogPage = () => {
                       </SheetDescription>
                     </SheetHeader>
                     <div className="mt-6">
-                      <FilterSidebar
-                        onFilterChange={handleFilterChange}
-                        initialFilters={activeFilters}
-                      />
+                      {useModernFilters ? (
+                        <ModernFilterSidebar
+                          onFilterChange={handleFilterChange}
+                          initialFilters={activeFilters}
+                        />
+                      ) : (
+                        <FilterSidebar
+                          onFilterChange={handleFilterChange}
+                          initialFilters={activeFilters}
+                        />
+                      )}
                     </div>
                   </SheetContent>
                 </Sheet>
@@ -365,6 +395,8 @@ const CatalogPage = () => {
           </TabsContent>
         </Tabs>
       </div>
+      
+      <FloatingCallButton />
     </Layout>
   );
 };
