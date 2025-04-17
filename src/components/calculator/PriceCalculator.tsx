@@ -23,7 +23,7 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Calculator, ArrowRight, Save, PieChart, BarChart3, Check, ChevronDown, ChevronUp, Download, Share2, Clipboard, CheckCircle2, 
-  Truck, CalendarClock, Settings2, FileText, CopyCheck, X, BoxSelect, PercentCircle, Calculator as CalculatorIcon } from "lucide-react";
+  Truck, CalendarClock, Settings2, FileText, CopyCheck, X, BoxSelect, PercentCircle, Calculator as CalculatorIcon, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
@@ -229,7 +229,7 @@ const PriceCalculator = () => {
     toast({
       title: "Расчёт сохранен",
       description: "Вы можете найти его в истории расчётов",
-      variant: "success"
+      variant: "default"
     });
   };
 
@@ -657,19 +657,10 @@ const PriceCalculator = () => {
                     {Object.entries(treatmentTypes).map(([key, { displayName, multiplier, description }]) => (
                       <SelectItem key={key} value={key}>
                         <div className="flex justify-between w-full items-center">
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span className="cursor-help flex items-center">
-                                  {displayName}
-                                  <Info className="h-3 w-3 ml-1 text-gray-400" />
-                                </span>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p className="text-xs">{description}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                          <span className="cursor-help flex items-center">
+                            {displayName}
+                            <Info className="h-3 w-3 ml-1 text-gray-400" />
+                          </span>
                           <Badge variant="outline" className="ml-2">x{multiplier}</Badge>
                         </div>
                       </SelectItem>
@@ -739,16 +730,7 @@ const PriceCalculator = () => {
                   <div className="space-y-2">
                     <label className="text-xs text-gray-500 flex items-center">
                       Объём материала (м³)
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Info className="h-3 w-3 ml-1 text-gray-400 cursor-help" />
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p className="text-xs">Введите объём материала в кубических метрах</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                      <Info className="h-3 w-3 ml-1 text-gray-400 cursor-help" />
                     </label>
                     <Input
                       type="number"
@@ -1217,3 +1199,4 @@ const PriceCalculator = () => {
 };
 
 export default PriceCalculator;
+
