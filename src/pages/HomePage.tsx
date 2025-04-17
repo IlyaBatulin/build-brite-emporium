@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -8,7 +7,7 @@ import ProductCard from "@/components/products/ProductCard";
 import CategoryCard from "@/components/categories/CategoryCard";
 import PriceCalculator from "@/components/calculator/PriceCalculator";
 import HouseVisualizer from "@/components/visualizer/HouseVisualizer";
-import { Category, Product } from "@/types";
+import FloatingCallButton from "@/components/common/FloatingCallButton";
 import { Truck, Package, Clock, Phone, ArrowRight, Settings, BarChart3, CalculatorIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,7 +17,6 @@ const HomePage = () => {
   const [activeTab, setActiveTab] = useState<string>("calculator");
   
   useEffect(() => {
-    // In a real app, this would be an API call
     setPopularProducts(getPopularProducts());
   }, []);
 
@@ -41,7 +39,7 @@ const HomePage = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-brand-800 to-brand-600 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1503387837-b154d5074bd2?auto=format&fit=crop&q=80&w=1800')] opacity-10 bg-cover bg-center"></div>
+        <div className="absolute inset-0 bg-[url('/images/lumber-yard.jpg')] opacity-10 bg-cover bg-center"></div>
         <div className="container mx-auto py-16 px-4 md:py-24 flex flex-col md:flex-row items-center relative z-10">
           <motion.div 
             className="md:w-1/2 mb-8 md:mb-0"
@@ -50,7 +48,7 @@ const HomePage = () => {
             transition={{ duration: 0.5 }}
           >
             <h1 className="text-3xl md:text-5xl font-bold mb-4">
-              Строительные материалы высокого качества
+              Больше чем стройматериалы
             </h1>
             <p className="text-lg md:text-xl mb-6 max-w-lg">
               От фундамента до кровли - все материалы для вашего строительства
@@ -71,11 +69,19 @@ const HomePage = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <img 
-              src="https://images.unsplash.com/photo-1503387837-b154d5074bd2?auto=format&fit=crop&q=80&w=600"
-              alt="Строительные материалы"
-              className="rounded-lg shadow-2xl hover:shadow-3xl transition-shadow duration-300"
-            />
+            <div className="relative rounded-lg overflow-hidden shadow-2xl">
+              <img 
+                src="/images/lumber-stack.jpg"
+                alt="Качественные стройматериалы"
+                className="w-full h-[400px] object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+              <div className="absolute bottom-4 left-4 right-4">
+                <p className="text-white text-xl font-semibold">
+                  Профессиональный подход к каждому проекту
+                </p>
+              </div>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -254,7 +260,7 @@ const HomePage = () => {
 
       {/* CTA Section */}
       <section className="py-12 bg-gradient-to-r from-green-800 to-green-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1582142839970-e5442b757b3e?auto=format&fit=crop&q=80&w=1800')] opacity-10 bg-cover bg-center"></div>
+        <div className="absolute inset-0 bg-[url('/images/warehouse.jpg')] opacity-10 bg-cover bg-center"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -275,6 +281,9 @@ const HomePage = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Floating Call Button */}
+      <FloatingCallButton />
     </Layout>
   );
 };
