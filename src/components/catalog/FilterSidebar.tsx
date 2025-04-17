@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { 
   Accordion, 
@@ -11,12 +12,19 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { FilterOptions, woodTypes, thicknesses, widths, lengths, grades, moistures, surfaceTreatments, purposes } from "@/types";
 import { getAllCategories } from "@/data/mockData";
-import { ChevronRight, X } from "lucide-react";
+import { ChevronRight, X, Filter } from "lucide-react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 interface FilterSidebarProps {
   onFilterChange: (filters: FilterOptions) => void;
   initialFilters?: FilterOptions;
 }
+
+// Helper function to get wood type image path
+const getWoodTypeImagePath = (woodType: string) => {
+  const normalizedName = woodType.toLowerCase().replace(' ', '_');
+  return `/images/wood/${normalizedName}.jpg`;
+};
 
 const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) => {
   const [filters, setFilters] = useState<FilterOptions>({
@@ -223,7 +231,10 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 space-y-6 border border-gray-100">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-gray-800">Фильтры</h2>
+        <div className="flex items-center">
+          <Filter className="h-5 w-5 text-green-600 mr-2" />
+          <h2 className="text-xl font-semibold text-gray-800">Фильтры</h2>
+        </div>
         <Button 
           variant="outline" 
           size="sm" 
@@ -403,12 +414,32 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
                         onCheckedChange={() => handleWoodTypeChange(type)}
                         className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                       />
-                      <Label
-                        htmlFor={`wood-${type}`}
-                        className="ml-2 text-sm cursor-pointer"
-                      >
-                        {type}
-                      </Label>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <Label
+                            htmlFor={`wood-${type}`}
+                            className="ml-2 text-sm cursor-pointer flex items-center"
+                          >
+                            {type}
+                            <span className="ml-1 text-xs text-green-600">(фото)</span>
+                          </Label>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-64">
+                          <div className="space-y-2">
+                            <div className="font-medium">{type}</div>
+                            <div className="w-full h-40 overflow-hidden rounded-md">
+                              <img 
+                                src={getWoodTypeImagePath(type)} 
+                                alt={`Древесина ${type}`}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = "/placeholder.svg";
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
                     </div>
                   ))}
                 </div>
@@ -439,12 +470,32 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
                         onCheckedChange={() => handleWoodTypeChange(type)}
                         className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                       />
-                      <Label
-                        htmlFor={`wood-${type}`}
-                        className="ml-2 text-sm cursor-pointer"
-                      >
-                        {type}
-                      </Label>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <Label
+                            htmlFor={`wood-${type}`}
+                            className="ml-2 text-sm cursor-pointer flex items-center"
+                          >
+                            {type}
+                            <span className="ml-1 text-xs text-green-600">(фото)</span>
+                          </Label>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-64">
+                          <div className="space-y-2">
+                            <div className="font-medium">{type}</div>
+                            <div className="w-full h-40 overflow-hidden rounded-md">
+                              <img 
+                                src={getWoodTypeImagePath(type)} 
+                                alt={`Древесина ${type}`}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = "/placeholder.svg";
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
                     </div>
                   ))}
                 </div>
@@ -475,12 +526,32 @@ const FilterSidebar = ({ onFilterChange, initialFilters }: FilterSidebarProps) =
                         onCheckedChange={() => handleWoodTypeChange(type)}
                         className="data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600"
                       />
-                      <Label
-                        htmlFor={`wood-${type}`}
-                        className="ml-2 text-sm cursor-pointer"
-                      >
-                        {type}
-                      </Label>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <Label
+                            htmlFor={`wood-${type}`}
+                            className="ml-2 text-sm cursor-pointer flex items-center"
+                          >
+                            {type}
+                            <span className="ml-1 text-xs text-green-600">(фото)</span>
+                          </Label>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-64">
+                          <div className="space-y-2">
+                            <div className="font-medium">{type}</div>
+                            <div className="w-full h-40 overflow-hidden rounded-md">
+                              <img 
+                                src={getWoodTypeImagePath(type)} 
+                                alt={`Древесина ${type}`}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = "/placeholder.svg";
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
                     </div>
                   ))}
                 </div>

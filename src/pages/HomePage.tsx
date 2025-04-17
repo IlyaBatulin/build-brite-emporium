@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
@@ -11,6 +12,7 @@ import FloatingCallButton from "@/components/common/FloatingCallButton";
 import { Truck, Package, Clock, Phone, ArrowRight, Settings, BarChart3, CalculatorIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Product } from "@/types"; // Added missing import
 
 const HomePage = () => {
   const [popularProducts, setPopularProducts] = useState<Product[]>([]);
