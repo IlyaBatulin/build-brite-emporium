@@ -58,7 +58,12 @@ export const coniferousTypes = ['Сосна', 'Ель'];
 export const deciduousTypes = ['Дуб', 'Бук', 'Ясень', 'Ольха', 'Берёза'];
 export const exoticTypes = ['Тик', 'Махагони', 'Венге', 'Мербау', 'Ироко', 'Зебрано', 'Палисандр'];
 
-export const woodTypes = [...coniferousTypes, ...deciduousTypes, ...exoticTypes];
+// Single consolidated woodTypes array
+export const woodTypes = [
+  ...coniferousTypes, 
+  ...deciduousTypes, 
+  ...exoticTypes
+];
 
 export const grades = ['0 сорт (высший)', '1 сорт', '2 сорт', '3 сорт', '4 сорт'];
 export const moistures = ['Естественная влажность (18–22%)', 'Камерная сушка (8–12%)'];
