@@ -8,242 +8,162 @@ export const categories: Category[] = [
     image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=500&h=500",
     subCategories: [
       {
-        id: "cut-lumber",
-        name: "Обрезной пиломатериал",
+        id: "cut-board",
+        name: "Доска обрезная",
         image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "lumber",
-        subCategories: [
-          {
-            id: "cut-board",
-            name: "Доска обрезная",
-            image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-            parentId: "cut-lumber"
-          },
-          {
-            id: "beam",
-            name: "Брус",
-            image: "https://images.unsplash.com/photo-1622021142947-da7dedc7c39a?auto=format&fit=crop&q=80&w=500&h=500",
-            parentId: "cut-lumber"
-          },
-          {
-            id: "small-beam",
-            name: "Брусок",
-            image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=500&h=500",
-            parentId: "cut-lumber"
-          },
-          {
-            id: "rail",
-            name: "Рейка",
-            image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=500&h=500",
-            parentId: "cut-lumber"
-          }
-        ]
+        parentId: "lumber"
       },
       {
-        id: "dry-lumber",
-        name: "Сухой пиломатериал",
+        id: "dry-cut-board",
+        name: "Доска обрезная сухая",
         image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "lumber",
-        subCategories: [
-          {
-            id: "dry-cut-board",
-            name: "Сухая обрезная доска",
-            image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
-            parentId: "dry-lumber"
-          },
-          {
-            id: "dry-cut-beam",
-            name: "Сухой обрезной брус",
-            image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
-            parentId: "dry-lumber"
-          },
-          {
-            id: "dry-planed-board",
-            name: "Сухая строганная доска",
-            image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
-            parentId: "dry-lumber"
-          },
-          {
-            id: "dry-planed-beam",
-            name: "Сухой строганный брус",
-            image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
-            parentId: "dry-lumber"
-          },
-          {
-            id: "dry-planed-rail",
-            name: "Сухая строганная рейка",
-            image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
-            parentId: "dry-lumber"
-          },
-          {
-            id: "dry-planed-small-beam",
-            name: "Сухой строганный брусок",
-            image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
-            parentId: "dry-lumber"
-          }
-        ]
+        parentId: "lumber"
+      },
+      {
+        id: "dry-planed-board",
+        name: "Доска строганная сухая",
+        image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "lumber"
+      },
+      {
+        id: "beam",
+        name: "Брус",
+        image: "https://images.unsplash.com/photo-1622021142947-da7dedc7c39a?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "lumber"
+      },
+      {
+        id: "small-beam",
+        name: "Брусок",
+        image: "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "lumber"
+      },
+      {
+        id: "dry-cut-beam",
+        name: "Брус обрезной сухой",
+        image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "lumber"
+      },
+      {
+        id: "dry-planed-beam",
+        name: "Брус строганный сухой",
+        image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "lumber"
+      },
+      {
+        id: "dry-planed-small-beam",
+        name: "Брусок строганный сухой",
+        image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "lumber"
+      },
+      {
+        id: "dry-planed-rail",
+        name: "Рейка строганная сухая",
+        image: "https://images.unsplash.com/photo-1615920606214-6428b3324c74?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "lumber"
       },
       {
         id: "profiled-beam",
         name: "Брус профилированный",
         image: "https://images.unsplash.com/photo-1622021142947-da7dedc7c39a?auto=format&fit=crop&q=80&w=500&h=500",
         parentId: "lumber"
-      }
-    ]
-  },
-  {
-    id: "wood-finishing",
-    name: "Отделка деревом",
-    image: "https://images.unsplash.com/photo-1604187353254-2526faf17ffe?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: [
+      },
       {
         id: "block-house",
         name: "Блок-хаус",
         image: "https://images.unsplash.com/photo-1604187353254-2526faf17ffe?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "wood-finishing"
+        parentId: "lumber"
       },
       {
         id: "beam-imitation",
         name: "Имитация бруса",
         image: "https://images.unsplash.com/photo-1604187353254-2526faf17ffe?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "wood-finishing"
+        parentId: "lumber"
       },
       {
         id: "euro-paneling",
         name: "Евровагонка",
         image: "https://images.unsplash.com/photo-1604187353254-2526faf17ffe?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "wood-finishing"
+        parentId: "lumber"
       },
       {
         id: "shtil-paneling",
         name: "Вагонка Штиль",
         image: "https://images.unsplash.com/photo-1604187353254-2526faf17ffe?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "wood-finishing"
-      },
-      {
-        id: "tongue-groove-board",
-        name: "Шпунтованная доска",
-        image: "https://images.unsplash.com/photo-1604187353254-2526faf17ffe?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "wood-finishing"
-      },
-      {
-        id: "terrace-board",
-        name: "Террасная доска",
-        image: "https://images.unsplash.com/photo-1604187353254-2526faf17ffe?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "wood-finishing"
-      }
-    ]
-  },
-  {
-    id: "moldings",
-    name: "Погонажные изделия",
-    image: "https://images.unsplash.com/photo-1567361672830-f7aa558ec4e3?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: [
-      {
-        id: "trim",
-        name: "Наличник",
-        image: "https://images.unsplash.com/photo-1567361672830-f7aa558ec4e3?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "moldings"
-      },
-      {
-        id: "baseboard",
-        name: "Плинтус",
-        image: "https://images.unsplash.com/photo-1567361672830-f7aa558ec4e3?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "moldings"
-      },
-      {
-        id: "corner",
-        name: "Уголок",
-        image: "https://images.unsplash.com/photo-1567361672830-f7aa558ec4e3?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "moldings"
-      },
-      {
-        id: "molding",
-        name: "Раскладка",
-        image: "https://images.unsplash.com/photo-1567361672830-f7aa558ec4e3?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "moldings"
+        parentId: "lumber"
       },
       {
         id: "planken",
         name: "Планкен",
         image: "https://images.unsplash.com/photo-1567361672830-f7aa558ec4e3?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "moldings"
-      }
-    ]
-  },
-  {
-    id: "plywood",
-    name: "Фанера",
-    image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: [
-      {
-        id: "plywood-fk",
-        name: "Фанера ФК",
-        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "plywood"
+        parentId: "lumber"
       },
       {
-        id: "plywood-fsf",
-        name: "Фанера ФСФ",
-        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "plywood"
+        id: "tongue-groove-board",
+        name: "Шпунтованная доска",
+        image: "https://images.unsplash.com/photo-1604187353254-2526faf17ffe?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "lumber"
       },
       {
-        id: "plywood-laminated",
-        name: "Фанера ламинированная",
-        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "plywood"
+        id: "terrace-board-velvet",
+        name: "Террасная доска Вельвет",
+        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "lumber"
       },
       {
-        id: "plywood-fire-resistant",
-        name: "Фанера трудногорючая",
+        id: "furniture-thermo-board",
+        name: "Мебельная и термодоска",
         image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "plywood"
-      },
-      {
-        id: "plywood-bakelite",
-        name: "Фанера бакелитовая",
-        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "plywood"
+        parentId: "lumber"
       }
     ]
   },
   {
     id: "wood-boards",
-    name: "Древесные плиты",
+    name: "Фанера, OSB, ДВП, ДСП",
     image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: [
-      {
-        id: "osb-3",
-        name: "OSB-3",
-        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "wood-boards"
-      },
-      {
-        id: "mdf",
-        name: "МДФ",
-        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "wood-boards"
-      },
-      {
-        id: "dvp",
-        name: "ДВП",
-        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "wood-boards"
-      },
-      {
-        id: "dsp",
-        name: "ДСП",
-        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "wood-boards"
-      },
-      {
-        id: "dsp-quick-deck",
-        name: "ДСП Quick Deck",
-        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
-        parentId: "wood-boards"
-      }
-    ]
+    subCategories: []
+  },
+  {
+    id: "aceid-csp",
+    name: "АЦЭИД, ЦСП",
+    image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+    subCategories: []
+  },
+  {
+    id: "concrete",
+    name: "ЖБИ",
+    image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+    subCategories: []
+  },
+  {
+    id: "roofing",
+    name: "Кровля",
+    image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+    subCategories: []
+  },
+  {
+    id: "general-construction",
+    name: "Общестрой",
+    image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+    subCategories: []
+  },
+  {
+    id: "films",
+    name: "Пленки",
+    image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+    subCategories: []
+  },
+  {
+    id: "insulation",
+    name: "Утеплители",
+    image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+    subCategories: []
+  },
+  {
+    id: "wood-protection",
+    name: "Защита для дерева",
+    image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+    subCategories: []
   }
 ];
 
