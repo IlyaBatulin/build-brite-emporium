@@ -121,7 +121,68 @@ export const categories: Category[] = [
     id: "wood-boards",
     name: "Фанера, OSB, ДВП, ДСП",
     image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: []
+    subCategories: [
+      {
+        id: "fk-plywood",
+        name: "Фанера ФК",
+        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-boards"
+      },
+      {
+        id: "fsf-plywood",
+        name: "Фанера ФСФ",
+        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-boards"
+      },
+      {
+        id: "laminated-plywood",
+        name: "Фанера ламинированная",
+        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-boards"
+      },
+      {
+        id: "fire-resistant-plywood",
+        name: "Фанера трудногорючая",
+        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-boards"
+      },
+      {
+        id: "bakelite-plywood",
+        name: "Фанера бакелитовая",
+        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-boards"
+      },
+      {
+        id: "osb",
+        name: "Плита OSB (ОСП)",
+        image: "https://images.unsplash.com/photo-1615486363973-f79d875780cf?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-boards"
+      },
+      {
+        id: "mdf",
+        name: "Плита МДФ",
+        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-boards"
+      },
+      {
+        id: "dvp",
+        name: "Плита ДВП",
+        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-boards"
+      },
+      {
+        id: "dsp",
+        name: "Плита ДСП",
+        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-boards"
+      },
+      {
+        id: "quick-deck",
+        name: "Плита ДСП влагостойкая Quick Deck",
+        image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-boards"
+      }
+    ]
   },
   {
     id: "aceid-csp",
