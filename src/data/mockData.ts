@@ -188,7 +188,62 @@ export const categories: Category[] = [
     id: "aceid-csp",
     name: "АЦЭИД, ЦСП",
     image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: []
+    subCategories: [
+      {
+        id: "aceid",
+        name: "АЦЭИД",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "aceid-csp"
+      },
+      {
+        id: "csp-plate",
+        name: "Плита ЦСП",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "aceid-csp"
+      },
+      {
+        id: "asbestos-cement-sheets",
+        name: "Асбестоцементные листы",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "aceid-csp"
+      },
+      {
+        id: "asbestos-cement-pipes",
+        name: "Асбестоцементные трубы",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "aceid-csp"
+      },
+      {
+        id: "asbestos-cardboard",
+        name: "Асбестовый картон",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "aceid-csp"
+      },
+      {
+        id: "drainage-pipes",
+        name: "Дренажные трубы",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "aceid-csp"
+      },
+      {
+        id: "drainage-trays",
+        name: "Лотки водоотводные",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "aceid-csp"
+      },
+      {
+        id: "leod-trays",
+        name: "Лотки ЛЭОД",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "aceid-csp"
+      },
+      {
+        id: "wave-slate",
+        name: "Шифер волновой",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "aceid-csp"
+      }
+    ]
   },
   {
     id: "concrete",
@@ -272,7 +327,7 @@ export const products: Product[] = [
     description: "Доска строганная сухая. Применяется в отделке помещений, изготовлении мебели, беседок, садовых построек.",
     price: 290,
     image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-    category: "Сухая строганная доска",
+    category: "��ухая строганная доска",
     inStock: true,
     unit: "м",
     woodType: "Сосна",
