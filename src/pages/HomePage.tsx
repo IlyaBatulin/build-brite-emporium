@@ -12,11 +12,11 @@ import FloatingCallButton from "@/components/common/FloatingCallButton";
 import { Truck, Package, Clock, Phone, ArrowRight, Settings, BarChart3, CalculatorIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Product } from "@/types"; // Added missing import
+import { Product } from "@/types";
 
 const HomePage = () => {
   const [popularProducts, setPopularProducts] = useState<Product[]>([]);
-  const [activeTab, setActiveTab] = useState<string>("calculator");
+  const [activeTab, setActiveTab] = useState<string>("visualizer");
   
   useEffect(() => {
     setPopularProducts(getPopularProducts());
