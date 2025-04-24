@@ -1,9 +1,6 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 @layer base {
   :root {
@@ -16,7 +13,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 142 76% 36%;
+    --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -25,15 +22,15 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 142 70% 96%;
-    --accent-foreground: 142 76% 36%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 142 76% 36%;
+    --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
 
@@ -52,20 +49,6 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
-    
-    --brand: 142 76% 36%;
-    --brand-dark: 142 76% 28%;
-    --brand-light: 142 70% 90%;
-    --brand-50: 142 75% 95%;
-    --brand-100: 142 70% 90%;
-    --brand-200: 142 65% 80%;
-    --brand-300: 142 60% 70%;
-    --brand-400: 142 55% 60%;
-    --brand-500: 142 50% 50%;
-    --brand-600: 142 76% 36%;
-    --brand-700: 142 76% 28%;
-    --brand-800: 142 76% 22%;
-    --brand-900: 142 76% 16%;
   }
 
   .dark {
@@ -78,7 +61,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 142 74% 46%;
+    --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -87,8 +70,8 @@
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 142 70% 18%;
-    --accent-foreground: 142 70% 90%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
@@ -104,20 +87,6 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
-    
-    --brand: 142 70% 50%;
-    --brand-dark: 142 70% 40%;
-    --brand-light: 142 40% 30%;
-    --brand-50: 142 30% 15%;
-    --brand-100: 142 36% 20%;
-    --brand-200: 142 40% 25%;
-    --brand-300: 142 45% 30%;
-    --brand-400: 142 50% 35%;
-    --brand-500: 142 60% 40%;
-    --brand-600: 142 65% 45%;
-    --brand-700: 142 70% 50%;
-    --brand-800: 142 65% 55%;
-    --brand-900: 142 60% 60%;
   }
 }
 
@@ -128,94 +97,5 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Montserrat', sans-serif;
-  }
-  
-  /* Premium Styles */
-  .text-brand {
-    @apply text-green-700;
-  }
-  
-  .text-brand-dark {
-    @apply text-green-800;
-  }
-  
-  .bg-brand {
-    @apply bg-green-700;
-  }
-  
-  .bg-brand-dark {
-    @apply bg-green-800;
-  }
-  
-  .bg-brand-light {
-    @apply bg-green-100;
-  }
-  
-  .hover\:bg-brand:hover {
-    @apply hover:bg-green-700;
-  }
-  
-  .hover\:bg-brand-dark:hover {
-    @apply hover:bg-green-800;
-  }
-  
-  .hover\:text-brand:hover {
-    @apply hover:text-green-700;
-  }
-  
-  .hover\:text-brand-dark:hover {
-    @apply hover:text-green-800;
-  }
-  
-  .border-brand {
-    @apply border-green-700;
-  }
-  
-  /* Animation classes */
-  .hover-scale {
-    @apply transition-transform duration-300;
-  }
-  
-  .hover-scale:hover {
-    @apply transform scale-105;
-  }
-  
-  .fade-in {
-    @apply animate-[fadeIn_0.3s_ease-in];
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Premium card effects */
-  .premium-card {
-    @apply transition-all duration-300 hover:shadow-xl;
-  }
-  
-  .premium-card:hover {
-    @apply transform -translate-y-1;
-  }
-  
-  /* Premium button effects */
-  .btn-premium {
-    @apply relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-green-700 to-green-600 hover:from-green-800 hover:to-green-700;
-  }
-  
-  .btn-premium::before {
-    content: '';
-    @apply absolute top-0 left-0 w-full h-full bg-white opacity-0 transition-opacity duration-300;
-  }
-  
-  .btn-premium:hover::before {
-    @apply opacity-10;
   }
 }
