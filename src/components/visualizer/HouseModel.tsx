@@ -4,6 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { HousePart } from './types';
 import { HouseGeometry } from './HouseGeometry';
+import * as THREE from 'three';
 
 interface HouseModelProps {
   selectedPart: HousePart | null;
