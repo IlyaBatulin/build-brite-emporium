@@ -280,31 +280,162 @@ export const categories: Category[] = [
     id: "roofing",
     name: "Кровля",
     image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: []
+    subCategories: [
+      {
+        id: "profiled-sheeting",
+        name: "Профнастил",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "roofing"
+      }
+    ]
   },
   {
     id: "general-construction",
     name: "Общестрой",
     image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: []
+    subCategories: [
+      {
+        id: "water-supply",
+        name: "Водоснабжение",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "general-construction"
+      },
+      {
+        id: "sewerage",
+        name: "Канализация",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "general-construction"
+      },
+      {
+        id: "heating-systems",
+        name: "Системы отопления",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "general-construction"
+      },
+      {
+        id: "waterproofing",
+        name: "Гидроизоляция",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "general-construction"
+      },
+      {
+        id: "ventilation-systems",
+        name: "Системы вентиляции",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "general-construction"
+      },
+      {
+        id: "electrical",
+        name: "Электрика",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "general-construction"
+      },
+      {
+        id: "dry-mixes",
+        name: "Сухие строительные смеси",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "general-construction"
+      },
+      {
+        id: "ceramic-tiles",
+        name: "Керамическая плитка керамогранит",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "general-construction"
+      },
+      {
+        id: "paints",
+        name: "Лакокрасочные материалы",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "general-construction"
+      }
+    ]
   },
   {
     id: "films",
     name: "Пленки",
     image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: []
+    subCategories: [
+      {
+        id: "vapor-barrier",
+        name: "Пароизоляция",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "films"
+      },
+      {
+        id: "windproof",
+        name: "Ветроизоляция",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "films"
+      },
+      {
+        id: "waterproofing-films",
+        name: "Гидроизоляция",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "films"
+      }
+    ]
   },
   {
     id: "insulation",
     name: "Утеплители",
     image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: []
+    subCategories: [
+      {
+        id: "manufacturers",
+        name: "Производители",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "insulation"
+      },
+      {
+        id: "thermal-insulation",
+        name: "Теплоизоляция",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "insulation"
+      },
+      {
+        id: "sound-insulation",
+        name: "Звукоизоляция",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "insulation"
+      },
+      {
+        id: "tapes",
+        name: "Разные ленты",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "insulation"
+      }
+    ]
   },
   {
     id: "wood-protection",
     name: "Защита для дерева",
     image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: []
+    subCategories: [
+      {
+        id: "wood-antiseptics",
+        name: "Антисептики для дерева",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-protection"
+      },
+      {
+        id: "fire-bio-protection",
+        name: "Огнебиозащита для дерева",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-protection"
+      },
+      {
+        id: "wood-bleachers",
+        name: "Отбеливатели для дерева",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-protection"
+      },
+      {
+        id: "anti-beetle",
+        name: "Антижук для древесины",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "wood-protection"
+      }
+    ]
   }
 ];
 
@@ -557,7 +688,7 @@ export const products: Product[] = [
     description: "Шпунтованная доска для настила полов в жилых и нежилых помещениях.",
     price: 580,
     image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-    category: "Шпунтованная доска",
+    category: "Шпунтованная д��ска",
     inStock: true,
     unit: "м²",
     woodType: "Сосна",
