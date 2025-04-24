@@ -178,7 +178,7 @@ export const categories: Category[] = [
       },
       {
         id: "quick-deck",
-        name: "Плита ДСП влагостойкая Quick Deck",
+        name: "Плита ��СП влагостойкая Quick Deck",
         image: "https://images.unsplash.com/photo-1581084349663-25d57f3d94d5?auto=format&fit=crop&q=80&w=500&h=500",
         parentId: "wood-boards"
       }
@@ -249,7 +249,32 @@ export const categories: Category[] = [
     id: "concrete",
     name: "ЖБИ",
     image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
-    subCategories: []
+    subCategories: [
+      {
+        id: "road-slabs",
+        name: "Плиты дорожные",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "concrete"
+      },
+      {
+        id: "airfield-slabs",
+        name: "Плиты аэродромные",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "concrete"
+      },
+      {
+        id: "foundation-blocks",
+        name: "Блоки фундаментные",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "concrete"
+      },
+      {
+        id: "truncated-blocks",
+        name: "Блоки усеченные",
+        image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&q=80&w=500&h=500",
+        parentId: "concrete"
+      }
+    ]
   },
   {
     id: "roofing",
