@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { 
   Card, 
@@ -9,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Cuboid, RotateCcw, Home, Info, ArrowRight, Axe, CheckCircle2, Ruler, PanelTop, Warehouse, DoorOpen, LayoutGrid, Fence, Box, Star, Download, Globe } from "lucide-react";
+import { Cuboid, Home, Info, ArrowRight, Axe, CheckCircle2, Ruler, PanelTop, Warehouse, DoorOpen, LayoutGrid, Fence, Box, Star, Download, Globe } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -36,8 +35,6 @@ const HouseVisualizer = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activePart, setActivePart] = useState<HousePart | null>(null);
   const [isVisible, setIsVisible] = useState(true);
-  const [isRotating, setIsRotating] = useState(false);
-  const [rotation, setRotation] = useState(0);
   const [view, setView] = useState<"3d" | "2d">("3d");
   const [timeOfDay, setTimeOfDay] = useState<"day" | "sunset" | "night">("day");
   const [viewMode, setViewMode] = useState<"materials" | "gallery" | "info">("materials");
@@ -390,14 +387,6 @@ const HouseVisualizer = () => {
         context.shadowBlur = 15;
         context.shadowOffsetX = 10;
         context.shadowOffsetY = 10;
-      }
-      
-      // Apply rotation if needed
-      if (isRotating || view === "3d") {
-        context.save();
-        context.translate(canvas.width / 2, canvas.height / 2);
-        context.rotate(rotation * Math.PI / 180);
-        context.translate(-canvas.width / 2, -canvas.height / 2);
       }
       
       // Draw foundation shadow
@@ -813,10 +802,6 @@ const HouseVisualizer = () => {
         }
       }
       
-      if (isRotating || view === "3d") {
-        context.restore();
-      }
-      
       if (view === "3d") {
         context.restore(); // Restore from shadow
       }
@@ -997,27 +982,12 @@ const HouseVisualizer = () => {
     
     canvas.addEventListener('click', handleCanvasClick);
     
-    // Add animation frame for rotation if enabled
-    let animationFrameId: number;
-    
-    if (isRotating) {
-      const animate = () => {
-        setRotation(prev => (prev + 0.2) % 360);
-        animationFrameId = requestAnimationFrame(animate);
-      };
-      
-      animationFrameId = requestAnimationFrame(animate);
-    } else {
-      drawHouse();
-    }
+    drawHouse();
     
     return () => {
       canvas.removeEventListener('click', handleCanvasClick);
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
     };
-  }, [activePart, isVisible, isRotating, rotation, view, timeOfDay]);
+  }, [activePart, isVisible, view, timeOfDay]);
   
   const handlePartSelect = (part: HousePart) => {
     setActivePart(part === activePart ? null : part);
@@ -1098,22 +1068,6 @@ const HouseVisualizer = () => {
                 <Box className="h-4 w-4 mr-1" />
               </motion.div>
               {view === "3d" ? "3D" : "2D"} вид
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setIsRotating(!isRotating)} 
-              className={`border-green-300 ${isRotating ? 'bg-green-700/40' : 'bg-green-700/20'} text-white hover:bg-green-700/40 hover:text-white`}
-              disabled={view !== "3d"}
-            >
-              <motion.div
-                animate={{ rotate: isRotating ? 360 : 0 }}
-                transition={{ duration: 2, repeat: isRotating ? Infinity : 0, ease: "linear" }}
-              >
-                <RotateCcw className="h-4 w-4 mr-1" />
-              </motion.div>
-              {isRotating ? "Остановить" : "Вращение"}
             </Button>
           </div>
         </div>
